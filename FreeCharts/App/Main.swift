@@ -8,10 +8,10 @@
 import SwiftUI
 
 @main
-struct FreeChartsApp: App {
+struct Main: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
         }
     }
 }
