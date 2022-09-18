@@ -62,16 +62,19 @@ class DownloadManager {
     }
     
     @discardableResult
-    func download(region: MKCoordinateRegion,
-                  refreshCachedFiles: Bool = true) -> Result<DownloadArea, DisplayError> {
+    func createAndDownloadNewArea(region: MKCoordinateRegion, name: String?) -> Result<DownloadArea, DisplayError> {
+        let area = DownloadArea(id: UUID(), name: name, region: region, status: .downloading)
+        return download(area: area).map { area }
+    }
+    
+    @discardableResult
+    func download(area: DownloadArea, refreshCachedFiles: Bool = true) -> Result<Void, DisplayError> {
         let r = getTileCacheDir()
         guard case .success(let downloadDir) = r else {
             return .failure(r.error!)
         }
         
-        let area = DownloadArea(id: UUID(), region: region, status: .downloading)
-        
-        let neededTiles = neededTiles(region: region)
+        let neededTiles = neededTiles(region: area.region)
         let overlay = ChartTileOverlay(fontSize: .medium)
         Publishers.MergeMany(neededTiles.map { [unowned self] (tilePath) -> AnyPublisher<TilePath, DisplayError> in
             let to = downloadFileURL(downloadDir: downloadDir, tilePath: tilePath)
@@ -101,7 +104,7 @@ class DownloadManager {
         
         downloadedAreas.value.append(area)
         
-        return .success(area)
+        return .success(())
     }
     
     func downloadProgressPublisher(area: DownloadArea) -> AnyPublisher<Float?, Never> {
@@ -123,6 +126,39 @@ class DownloadManager {
             return nil
         }
         return try? Data(contentsOf: downloadFileURL(downloadDir: dir, tilePath: path))
+    }
+    
+    func deleteDownload(area: DownloadArea) -> AnyPublisher<Void, DisplayError> {
+        downloadedAreas.first()
+            .receive(on: diskQueue)
+            .tryMap { downloadedAreas in
+                let r = self.getTileCacheDir()
+                guard case .success(let downloadDir) = r else {
+                    throw r.error!
+                }
+                
+                var tilesToRemove = neededTiles(region: area.region)
+                downloadedAreas
+                    .filter { $0.id != area.id }
+                    .forEach {
+                        neededTiles(region: $0.region).forEach { tilesToRemove.remove($0) }
+                    }
+                
+                try tilesToRemove.forEach {
+                    let url = downloadFileURL(downloadDir: downloadDir, tilePath: $0)
+                    if self.fileManager.fileExists(atPath: url.path) {
+                        try self.fileManager.removeItem(at: url)
+                    }
+                }
+            }
+            .catch {
+                Fail(error: DisplayError(anyError: $0, defaultDisplayString: "Failed to remove downloaded area"))
+            }
+            .receive(on: DispatchQueue.main)
+            .map {
+                self.downloadedAreas.value.removeAll { $0.id == area.id }
+            }
+            .eraseToAnyPublisher()
     }
     
     // MARK: - Initialize

@@ -34,6 +34,7 @@
 		CF65A13828D6C565004B241B /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF65A13728D6C565004B241B /* Logger.swift */; };
 		CF65A13A28D79368004B241B /* SwiftUI+UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF65A13928D79368004B241B /* SwiftUI+UserDefaults.swift */; };
 		CF65A13E28D79D56004B241B /* MapSettingsMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF65A13D28D79D56004B241B /* MapSettingsMenuView.swift */; };
+		CF65A14128D7B27B004B241B /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF65A14028D7B27B004B241B /* ToastView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,6 +85,7 @@
 		CF65A13728D6C565004B241B /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		CF65A13928D79368004B241B /* SwiftUI+UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwiftUI+UserDefaults.swift"; sourceTree = "<group>"; };
 		CF65A13D28D79D56004B241B /* MapSettingsMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSettingsMenuView.swift; sourceTree = "<group>"; };
+		CF65A14028D7B27B004B241B /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -175,7 +177,10 @@
 			isa = PBXGroup;
 			children = (
 				CF143C0928D51DA100904E7E /* RootView.swift */,
+				CF65A11A28D631C0004B241B /* Download */,
 				CF65A12428D659D7004B241B /* Map */,
+				CF65A14228D7B596004B241B /* Settings */,
+				CF65A13F28D7B26F004B241B /* Shared */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -188,14 +193,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		CF65A11A28D631C0004B241B /* Map Download */ = {
+		CF65A11A28D631C0004B241B /* Download */ = {
 			isa = PBXGroup;
 			children = (
 				CF143C3B28D57C8400904E7E /* DownloadOverlayView.swift */,
 				CF65A13128D692E2004B241B /* DownloadMenuView.swift */,
 				CF65A13328D6BC2E004B241B /* DownloadAreaListCell.swift */,
 			);
-			path = "Map Download";
+			path = Download;
 			sourceTree = "<group>";
 		};
 		CF65A11D28D631F6004B241B /* App */ = {
@@ -238,10 +243,24 @@
 				CF143C3728D5643400904E7E /* MapMenuView.swift */,
 				CF143C3228D51E7D00904E7E /* MapView.swift */,
 				CF65A12528D65A12004B241B /* ChartTileOverlay.swift */,
-				CF65A11A28D631C0004B241B /* Map Download */,
-				CF65A13D28D79D56004B241B /* MapSettingsMenuView.swift */,
 			);
 			path = Map;
+			sourceTree = "<group>";
+		};
+		CF65A13F28D7B26F004B241B /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				CF65A14028D7B27B004B241B /* ToastView.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		CF65A14228D7B596004B241B /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				CF65A13D28D79D56004B241B /* MapSettingsMenuView.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -380,6 +399,7 @@
 				CF143C3328D51E7D00904E7E /* MapView.swift in Sources */,
 				CF65A13028D68460004B241B /* Combine.swift in Sources */,
 				CF143C3C28D57C8400904E7E /* DownloadOverlayView.swift in Sources */,
+				CF65A14128D7B27B004B241B /* ToastView.swift in Sources */,
 				CF143C3828D5643400904E7E /* MapMenuView.swift in Sources */,
 				CF65A12E28D67B39004B241B /* MKTileOverlayPath.swift in Sources */,
 				CF65A11F28D631FF004B241B /* Application.swift in Sources */,

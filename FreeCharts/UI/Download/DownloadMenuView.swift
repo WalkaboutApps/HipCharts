@@ -5,6 +5,7 @@
 //  Created by Fish Sticks on 9/17/22.
 //
 
+import Combine
 import SwiftUI
 
 let bytesInMB: Float = 1048576
@@ -20,6 +21,9 @@ struct DownloadMenuView: View {
     var manager = app.dependencies.downloadManager
     
     @State var areas = [DownloadArea]()
+    @State var cancellables = CancellableSet()
+    @State var isLoading = false
+    @State var errorText: String?
     
     var body: some View {
         VStack(spacing: 0) {
@@ -37,20 +41,35 @@ struct DownloadMenuView: View {
                     .padding()
             }
         }
+        .overlay(Group { if isLoading { ProgressView() } })
         .onReceive(manager.downloadedAreas, perform: { areas = $0 })
         .navigationTitle("Downloads")
     }
     
     var areasListView: some View {
-        List(areas) { area in
-            Button {
-                mapRegion = area.region
-                showDownloadMenu = false
-            } label: {
-                DownloadAreaListCell(area: area, index: areas.firstIndex { $0.id == area.id }!)
-                    .foregroundColor(Color.black)
+        List() {
+            ForEach(areas) { area in
+                Button {
+                    mapRegion = area.region
+                    showDownloadMenu = false
+                } label: {
+                    DownloadAreaListCell(area: area, index: areas.firstIndex { $0.id == area.id }!)
+                        .background(Color.white)
+                }
+                .buttonStyle(.plain)
             }
-            .buttonStyle(.plain)
+            .onDelete { index in
+                guard let i = index.first else { return }
+                isLoading = true
+                manager.deleteDownload(area: areas[i])
+                    .sink { completion in
+                        if case .failure(let error) = completion {
+                            errorText = error.displayString
+                        }
+                        isLoading = false
+                    } receiveValue: { }
+                    .store(in: &cancellables)
+            }
         }
     }
     

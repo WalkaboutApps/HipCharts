@@ -55,7 +55,9 @@ struct MapContainerView: View {
                         mapRegion: $mapRegion)
             
             if showNewDownloadOverlay {
-                DownloadOverlayView(showDownloadMenu: $showDownloadMenu, mapRegion: $mapRegion)
+                DownloadOverlayView(showDownloadMenu: $showDownloadMenu,
+                                    showNewDownloadOverlayView: $showNewDownloadOverlay,
+                                    mapRegion: $mapRegion)
             }
             
             if !showCharts && showChartsUserPreference {
