@@ -8,7 +8,7 @@
 import Foundation
 import MapKit
 
-enum ChartFontSize: Int {
+enum ChartFontSize: Int, Codable {
     case large = 360
     case medium = 180
     case small = 90

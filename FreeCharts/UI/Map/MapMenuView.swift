@@ -6,16 +6,17 @@
 //
 
 import SwiftUI
-import MapKit
 
 struct MapMenuView: View {
     
     let showMenu: Bool
     @State var showMapTypeView = false
     @Binding var showCharts: Bool
-    @Binding var baseMapType: MKMapType
+    @Binding var baseMapType: MapType
     @Binding var showDownloadMenu: Bool
     @Binding var showSettingsMenu: Bool
+    @Binding var showNewDownloadOverlayView: Bool
+    @Binding var mapRegion: MapRegion
     
     var body: some View {
         VStack {
@@ -25,6 +26,7 @@ struct MapMenuView: View {
             
             if showMenu {
                 VStack(spacing: 0) {
+                    
                     Button {
                         showMapTypeView.toggle()
                     } label: {
@@ -32,19 +34,22 @@ struct MapMenuView: View {
                             .padding()
                     }
                     
-                    Button {
-                        showDownloadMenu.toggle()
+                    NavigationLink(isActive: $showDownloadMenu) {
+                        DownloadMenuView(showNewDownloadOverlay: $showNewDownloadOverlayView,
+                                                      showDownloadMenu: $showDownloadMenu,
+                                                      mapRegion: $mapRegion)
                     } label: {
                         Image(systemName: "square.and.arrow.down.on.square")
                             .padding()
                     }
                     
-                    Button {
-                        showSettingsMenu.toggle()
+                    NavigationLink(isActive: $showSettingsMenu) {
+                        MapSettingsMenuView(baseMapType: $baseMapType, showCharts: $showCharts)
                     } label: {
                         Image(systemName: "gearshape")
                             .padding()
                     }
+                    
                 }
                 .background(RoundedRectangle(cornerRadius: 8).fill(Color.white.opacity(0.7)))
                 .overlay(

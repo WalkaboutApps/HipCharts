@@ -20,13 +20,9 @@ struct DownloadMenuView: View {
     var manager = app.dependencies.downloadManager
     
     @State var areas = [DownloadArea]()
-
+    
     var body: some View {
         VStack(spacing: 0) {
-            Text("Downloads")
-                .font(.title)
-                .padding()
-            
             if areas.count == 0 {
                 nullStateListView
             } else {
@@ -42,6 +38,7 @@ struct DownloadMenuView: View {
             }
         }
         .onReceive(manager.downloadedAreas, perform: { areas = $0 })
+        .navigationTitle("Downloads")
     }
     
     var areasListView: some View {

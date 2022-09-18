@@ -12,10 +12,12 @@ private let mapRegionDefaultsKey = "MapRegion"
 
 struct MapContainerView: View {
     
-    // TODO: Store map type choice and restore on launch
+    @AppStorage("chartFontSize") var chartFontSize = ChartFontSize.medium
+    @SceneStorage("showCharts") var showChartsUserPreference = true
+    @SceneStorage("baseMap") var baseMapType = MapType.standard
+    @SceneStorage("mapRegion") var mapRegion: MapRegion = app.dependencies.defaults.codable(forKey: mapRegionDefaultsKey) ?? .init()
+    
     @State var showCharts = false
-    @State var baseMapType = MKMapType.standard
-    @State var mapRegion: MapRegion = app.dependencies.defaults.codable(forKey: mapRegionDefaultsKey) ?? .init()
     @State var showDownloadMenu = false
     @State var showNewDownloadOverlay = false
     @State var showSettingsMenu = false
@@ -24,12 +26,10 @@ struct MapContainerView: View {
     var downloadManager = app.dependencies.downloadManager
 
     var body: some View {
-        if showDownloadMenu {
-            DownloadMenuView(showNewDownloadOverlay: $showNewDownloadOverlay,
-                             showDownloadMenu: $showDownloadMenu,
-                             mapRegion: $mapRegion)
-        } else {
+        NavigationView {
             map
+                .navigationBarHidden(true)
+                .navigationTitle("Back")
         }
     }
     
@@ -37,6 +37,7 @@ struct MapContainerView: View {
         ZStack(alignment: .bottomTrailing) {
             MapView(showCharts: showCharts,
                     baseMap: baseMapType,
+                    chartFontSize: chartFontSize,
                     mapRegion: Binding(get: { mapRegion },
                                        set: {
                 defaults.setCodable(mapRegion, forKey: mapRegionDefaultsKey)
@@ -49,14 +50,30 @@ struct MapContainerView: View {
                         showCharts: $showCharts,
                         baseMapType: $baseMapType,
                         showDownloadMenu: $showDownloadMenu,
-                        showSettingsMenu: $showSettingsMenu)
+                        showSettingsMenu: $showSettingsMenu,
+                        showNewDownloadOverlayView: $showNewDownloadOverlay,
+                        mapRegion: $mapRegion)
             
             if showNewDownloadOverlay {
                 DownloadOverlayView(showDownloadMenu: $showDownloadMenu, mapRegion: $mapRegion)
             }
+            
+            if !showCharts && showChartsUserPreference {
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        ProgressView()
+                        Spacer()
+                    }
+                    Spacer()
+                }
+            }
         }
         .background(Color.black)
-        .onReceive(downloadManager.cacheReady.dropFirst()) { showCharts = $0 }
+        .onReceive(downloadManager.cacheReady.dropFirst()) {
+            showCharts = $0 && showChartsUserPreference
+        }
     }
 }
 

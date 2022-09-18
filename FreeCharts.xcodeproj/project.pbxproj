@@ -32,6 +32,8 @@
 		CF65A13428D6BC2E004B241B /* DownloadAreaListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF65A13328D6BC2E004B241B /* DownloadAreaListCell.swift */; };
 		CF65A13628D6BFAE004B241B /* UserDefaults+Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF65A13528D6BFAE004B241B /* UserDefaults+Codable.swift */; };
 		CF65A13828D6C565004B241B /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF65A13728D6C565004B241B /* Logger.swift */; };
+		CF65A13A28D79368004B241B /* SwiftUI+UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF65A13928D79368004B241B /* SwiftUI+UserDefaults.swift */; };
+		CF65A13E28D79D56004B241B /* MapSettingsMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF65A13D28D79D56004B241B /* MapSettingsMenuView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,6 +82,8 @@
 		CF65A13328D6BC2E004B241B /* DownloadAreaListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadAreaListCell.swift; sourceTree = "<group>"; };
 		CF65A13528D6BFAE004B241B /* UserDefaults+Codable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Codable.swift"; sourceTree = "<group>"; };
 		CF65A13728D6C565004B241B /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		CF65A13928D79368004B241B /* SwiftUI+UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwiftUI+UserDefaults.swift"; sourceTree = "<group>"; };
+		CF65A13D28D79D56004B241B /* MapSettingsMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSettingsMenuView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -213,6 +217,7 @@
 				CF65A12D28D67B39004B241B /* MKTileOverlayPath.swift */,
 				CF65A12F28D68460004B241B /* Combine.swift */,
 				CF65A13528D6BFAE004B241B /* UserDefaults+Codable.swift */,
+				CF65A13928D79368004B241B /* SwiftUI+UserDefaults.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -234,6 +239,7 @@
 				CF143C3228D51E7D00904E7E /* MapView.swift */,
 				CF65A12528D65A12004B241B /* ChartTileOverlay.swift */,
 				CF65A11A28D631C0004B241B /* Map Download */,
+				CF65A13D28D79D56004B241B /* MapSettingsMenuView.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -377,6 +383,7 @@
 				CF143C3828D5643400904E7E /* MapMenuView.swift in Sources */,
 				CF65A12E28D67B39004B241B /* MKTileOverlayPath.swift in Sources */,
 				CF65A11F28D631FF004B241B /* Application.swift in Sources */,
+				CF65A13E28D79D56004B241B /* MapSettingsMenuView.swift in Sources */,
 				CF65A12A28D66D8E004B241B /* Result.swift in Sources */,
 				CF65A13228D692E2004B241B /* DownloadMenuView.swift in Sources */,
 				CF65A12628D65A12004B241B /* ChartTileOverlay.swift in Sources */,
@@ -386,6 +393,7 @@
 				CF65A12C28D6737B004B241B /* URLResponse+Error.swift in Sources */,
 				CF65A12828D669E2004B241B /* DisplayError.swift in Sources */,
 				CF65A12228D6561F004B241B /* MKCoordinateRegion+Codable.swift in Sources */,
+				CF65A13A28D79368004B241B /* SwiftUI+UserDefaults.swift in Sources */,
 				CF65A11C28D631DE004B241B /* DownloadManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -553,6 +561,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -582,6 +591,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

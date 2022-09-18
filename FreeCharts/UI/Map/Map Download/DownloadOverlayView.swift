@@ -57,7 +57,6 @@ struct DownloadOverlayView: View {
     }
 }
 
-private let sharedOverlay = ChartTileOverlay()
 func estimatedDownloadTileCount(region: MKCoordinateRegion) -> Int {
     var count = 0
     (ChartTileOverlay.minimumZ ... ChartTileOverlay.maximumZ).forEach { zoomLevel in

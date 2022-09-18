@@ -72,7 +72,7 @@ class DownloadManager {
         let area = DownloadArea(id: UUID(), region: region, status: .downloading)
         
         let neededTiles = neededTiles(region: region)
-        let overlay = ChartTileOverlay()
+        let overlay = ChartTileOverlay(fontSize: .medium)
         Publishers.MergeMany(neededTiles.map { [unowned self] (tilePath) -> AnyPublisher<TilePath, DisplayError> in
             let to = downloadFileURL(downloadDir: downloadDir, tilePath: tilePath)
             if !refreshCachedFiles && fileManager.fileExists(atPath: to.path) {
