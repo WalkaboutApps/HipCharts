@@ -40,8 +40,10 @@ struct MapContainerView: View {
                     chartFontSize: chartFontSize,
                     mapRegion: Binding(get: { mapRegion },
                                        set: {
-                defaults.setCodable(mapRegion, forKey: mapRegionDefaultsKey)
-                mapRegion = $0
+                if mapRegion != $0 {
+                    defaults.setCodable(mapRegion, forKey: mapRegionDefaultsKey)
+                    mapRegion = $0
+                }
             }))
                 .ignoresSafeArea()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)

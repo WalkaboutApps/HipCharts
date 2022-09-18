@@ -8,6 +8,7 @@
 import SwiftUI
 import MapKit
 
+let bytesInAGb: Float = 1073741824
 private let averageFileSizeBytes: Float = 9436.467
 
 struct DownloadOverlayView: View {
@@ -24,47 +25,72 @@ struct DownloadOverlayView: View {
             
     var body: some View {
         ZStack {
-            GeometryReader { geometry in
-                ZStack {
-                    Color.white.opacity(0.9)
-                    RoundedRectangle(cornerRadius: 8)
-                        .blendMode(.destinationOut)
-                        .frame(width: geometry.size.width - 10,
-                               height: geometry.size.height - 100 - getSafeArea().top - getSafeArea().bottom)
-                }
-                .compositingGroup()
-                .ignoresSafeArea()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .allowsHitTesting(false)
-            }
-
             if showNameField {
                 nameField
             } else {
-                VStack(spacing: 0) {
+                VStack {
+                    
                     Text("Choose an area to download")
-                        .font(.title2)
+                        .multilineTextAlignment(.center)
+                        .font(.title3)
                         .padding()
+                        .background(Color.white.opacity(0.8))
+                        .cornerRadius(8)
+                    
+                    backButton
                     
                     Spacer()
                     
-                    Button {
-                        showNameField = true
-                    } label: {
-                        Text("Download")
-                            .font(.title2)
+                    VStack(spacing: 10) {
+                        Button {
+                            showNameField = true
+                        } label: {
+                            Text("Download")
+                                .font(.title2)
+                        }
+                        
+                        Text(estimatedSizeText)
                     }
-                    
-                    Text("~\(estimatedDownloadTileCount(region: mapRegion)) tiles, ~\(Float(estimatedDownloadTileCount(region: mapRegion)) * averageFileSizeBytes / bytesInMB, specifier: "%.0f") MB")
-                        .padding(.top, 4)
+                    .padding()
+                    .background(Color.white.opacity(0.8))
+                    .cornerRadius(8)
+                    .padding(.bottom)
+
                 }
-                .padding(.bottom)
             }
         }
+        .animation(.easeInOut, value: 0.3)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    
+    var estimatedSizeText: String {
+        let tileCount = estimatedDownloadTileCount(region: mapRegion)
+        let sizeBytes = Float(tileCount) * averageFileSizeBytes
+        let size = sizeBytes > bytesInAGb ? Float(sizeBytes) / bytesInAGb : Float(sizeBytes) / bytesInMB
+        let unit = sizeBytes > bytesInAGb ? "gb" : "mb"
+
+        return "~\(tileCount) tiles, ~\(String(format: "%.1f", size)) \(unit)"
+    }
+    
+    var backButton: some View {
+        HStack {
+            Button {
+                showNewDownloadOverlayView.toggle()
+            } label: {
+                Image(systemName: "chevron.left")
+                    .padding()
+                    .background(Circle().fill(Color.white.opacity(0.8))
+                        )
+            }
+            Spacer()
+        }
+        .padding(.horizontal)
+        .id("back button")
     }
     
     var nameField: some View {
         VStack {
+            backButton
             Spacer()
             VStack {
                 Text("Name")
