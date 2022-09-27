@@ -14,7 +14,7 @@ struct DownloadMenuView: View {
     
     @Binding var showNewDownloadOverlay: Bool
     @Binding var showDownloadMenu: Bool
-    @Binding var mapRegion: MapRegion
+    @Binding var mapChangeEvent: MapRegionChangeEvent
     
     @State var selection: UUID?
     
@@ -49,14 +49,10 @@ struct DownloadMenuView: View {
     var areasListView: some View {
         List() {
             ForEach(areas) { area in
-                Button {
-                    mapRegion = area.region
+                DownloadAreaListCell(area: area, index: areas.firstIndex { $0.id == area.id }!) {
+                    mapChangeEvent = .init(reason: .app, region: area.region)
                     showDownloadMenu = false
-                } label: {
-                    DownloadAreaListCell(area: area, index: areas.firstIndex { $0.id == area.id }!)
-                        .background(Color.white)
                 }
-                .buttonStyle(.plain)
             }
             .onDelete { index in
                 guard let i = index.first else { return }
@@ -101,21 +97,23 @@ struct DownloadMenuView: View {
 extension DownloadArea: Identifiable { }
 
 struct DownloadMenuView_Previews: PreviewProvider {
-    static let region = MapRegion(center: .init(latitude: 1, longitude: 1),
-                                  span: .init(latitudeDelta: 0.01, longitudeDelta: 0.01))
+    static let mapChangeEvent = MapRegionChangeEvent(reason: .map,
+                                                     region: .init(center: .init(latitude: 1, longitude: 1),
+                                                                   span: .init(latitudeDelta: 0.01,
+                                                                               longitudeDelta: 0.01)))
 
-    static let area = DownloadArea(id: .init(), name: "Fish", region: region, status: .complete, sizeBytes: 13000000)
-    static let area2 = DownloadArea(id: .init(), name: nil, region: region, status: .complete, sizeBytes: 1300000)
+    static let area = DownloadArea(id: .init(), name: "Fish", region: mapChangeEvent.region, status: .complete, sizeBytes: 13000000)
+    static let area2 = DownloadArea(id: .init(), name: nil, region: mapChangeEvent.region, status: .complete, sizeBytes: 1300000)
 
     static var previews: some View {
         Group {
             DownloadMenuView(showNewDownloadOverlay: .constant(true),
                              showDownloadMenu: .constant(true),
-                             mapRegion: .constant(region))
+                             mapChangeEvent: .constant(mapChangeEvent))
             
             DownloadMenuView(showNewDownloadOverlay: .constant(true),
                              showDownloadMenu: .constant(true),
-                             mapRegion: .constant(region),
+                             mapChangeEvent: .constant(mapChangeEvent),
                              areas: [area, area2])
         }
     }

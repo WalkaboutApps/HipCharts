@@ -35,6 +35,7 @@
 		CF65A13A28D79368004B241B /* SwiftUI+UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF65A13928D79368004B241B /* SwiftUI+UserDefaults.swift */; };
 		CF65A13E28D79D56004B241B /* MapSettingsMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF65A13D28D79D56004B241B /* MapSettingsMenuView.swift */; };
 		CF65A14128D7B27B004B241B /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF65A14028D7B27B004B241B /* ToastView.swift */; };
+		CF65A14428D7EB65004B241B /* Color+UISystemColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF65A14328D7EB65004B241B /* Color+UISystemColors.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,6 +87,7 @@
 		CF65A13928D79368004B241B /* SwiftUI+UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwiftUI+UserDefaults.swift"; sourceTree = "<group>"; };
 		CF65A13D28D79D56004B241B /* MapSettingsMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSettingsMenuView.swift; sourceTree = "<group>"; };
 		CF65A14028D7B27B004B241B /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
+		CF65A14328D7EB65004B241B /* Color+UISystemColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+UISystemColors.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -223,6 +225,7 @@
 				CF65A12F28D68460004B241B /* Combine.swift */,
 				CF65A13528D6BFAE004B241B /* UserDefaults+Codable.swift */,
 				CF65A13928D79368004B241B /* SwiftUI+UserDefaults.swift */,
+				CF65A14328D7EB65004B241B /* Color+UISystemColors.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -414,6 +417,7 @@
 				CF65A12828D669E2004B241B /* DisplayError.swift in Sources */,
 				CF65A12228D6561F004B241B /* MKCoordinateRegion+Codable.swift in Sources */,
 				CF65A13A28D79368004B241B /* SwiftUI+UserDefaults.swift in Sources */,
+				CF65A14428D7EB65004B241B /* Color+UISystemColors.swift in Sources */,
 				CF65A11C28D631DE004B241B /* DownloadManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -576,6 +580,7 @@
 				DEVELOPMENT_TEAM = 26629D7QMJ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "To show your location on the map";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -606,6 +611,7 @@
 				DEVELOPMENT_TEAM = 26629D7QMJ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "To show your location on the map";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

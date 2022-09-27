@@ -8,7 +8,7 @@
 import Foundation
 import MapKit
 
-enum ChartFontSize: Int, Codable {
+enum ChartTextSize: Int, Codable, CaseIterable {
     case large = 360
     case medium = 180
     case small = 90
@@ -18,13 +18,13 @@ class ChartTileOverlay: MKTileOverlay {
     static let minimumZ = 0
     static let maximumZ = 17
     
-    let fontSize: ChartFontSize
+    let textSize: ChartTextSize
     
     private let downloadManager: DownloadManager
     
-    required init(fontSize: ChartFontSize,
+    required init(textSize: ChartTextSize,
                   downloadManager: DownloadManager = app.dependencies.downloadManager) {
-        self.fontSize = fontSize
+        self.textSize = textSize
         self.downloadManager = downloadManager
         super.init(urlTemplate: nil)
         
@@ -32,12 +32,11 @@ class ChartTileOverlay: MKTileOverlay {
     }
     
     override func url(forTilePath path: MKTileOverlayPath) -> URL {
-        let dpi = fontSize.rawValue
+        let dpi = textSize.rawValue
         let (minY, maxX) = convertToWebMercator(coordinate: topLeftCoordinateOfXYZTile(x: path.x, y: path.y, z: path.z))
         let (maxY, minX) = convertToWebMercator(coordinate: topLeftCoordinateOfXYZTile(x: path.x + 1, y: path.y + 1, z: path.z))
         
-        let urlString = "https://gis.charttools.noaa.gov/arcgis/rest/services/MCS/NOAAChartDisplay/MapServer/exts/MaritimeChartService/MapServer/export?size=\(tileSize.width)%2C\(tileSize.height)&bbox=\(minY)%2C\(minX)%2C\(maxY)%2C\(maxX)&bboxsr=3857&imagesr=3857&dpi=\(dpi)"
-        logger.log("Loading: \(path)")
+        let urlString = "https://gis.charttools.noaa.gov/arcgis/rest/services/MCS/NOAAChartDisplay/MapServer/exts/MaritimeChartService/MapServer/export?f=image&format=PNG32&transparent=true&layers=show%3A2%2C3%2C4%2C5%2C6%2C7&format=png8&size=\(tileSize.width)%2C\(tileSize.height)&bbox=\(minY)%2C\(minX)%2C\(maxY)%2C\(maxX)&bboxsr=3857&imagesr=3857&dpi=\(dpi)&transparent=true"
         return URL(string: urlString)!
     }
     

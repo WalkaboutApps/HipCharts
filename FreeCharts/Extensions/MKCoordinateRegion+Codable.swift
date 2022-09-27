@@ -33,6 +33,10 @@ extension MKCoordinateRegion: CodableAndRawRepresentable {
         self.init(center: .init(latitude: centerLat, longitude: centerLon),
                   span: .init(latitudeDelta: spanLat, longitudeDelta: spanLon))
     }
+    
+    init() {
+        self.init(center: .init(), span: .init(latitudeDelta: 180, longitudeDelta: 360))
+    }
 }
 
 extension CodableAndRawRepresentable {

@@ -17,7 +17,7 @@ struct DownloadOverlayView: View {
     
     @Binding var showDownloadMenu: Bool
     @Binding var showNewDownloadOverlayView: Bool
-    @Binding var mapRegion: MKCoordinateRegion
+    @Binding var mapChangeEvent: MapRegionChangeEvent
     @State var showNameField = false
     @State var name: String = ""
     
@@ -34,7 +34,7 @@ struct DownloadOverlayView: View {
                         .multilineTextAlignment(.center)
                         .font(.title3)
                         .padding()
-                        .background(Color.white.opacity(0.8))
+                        .background(Color.systemBackground.opacity(0.8))
                         .cornerRadius(8)
                     
                     backButton
@@ -52,7 +52,7 @@ struct DownloadOverlayView: View {
                         Text(estimatedSizeText)
                     }
                     .padding()
-                    .background(Color.white.opacity(0.8))
+                    .background(Color.systemBackground.opacity(0.8))
                     .cornerRadius(8)
                     .padding(.bottom)
 
@@ -64,7 +64,7 @@ struct DownloadOverlayView: View {
     }
     
     var estimatedSizeText: String {
-        let tileCount = estimatedDownloadTileCount(region: mapRegion)
+        let tileCount = estimatedDownloadTileCount(region: mapChangeEvent.region)
         let sizeBytes = Float(tileCount) * averageFileSizeBytes
         let size = sizeBytes > bytesInAGb ? Float(sizeBytes) / bytesInAGb : Float(sizeBytes) / bytesInMB
         let unit = sizeBytes > bytesInAGb ? "gb" : "mb"
@@ -79,7 +79,7 @@ struct DownloadOverlayView: View {
             } label: {
                 Image(systemName: "chevron.left")
                     .padding()
-                    .background(Circle().fill(Color.white.opacity(0.8))
+                    .background(Circle().fill(Color.systemBackground.opacity(0.8))
                         )
             }
             Spacer()
@@ -100,7 +100,7 @@ struct DownloadOverlayView: View {
                 CustomTextField(text: $name, isFirstResponder: true)
                     .frame(height: 44)
                 Button(action: {
-                    downloadManager.createAndDownloadNewArea(region: mapRegion,
+                    downloadManager.createAndDownloadNewArea(region: mapChangeEvent.region,
                                                              name: name == "" ? nil : name)
                     showNewDownloadOverlayView = false
                     showDownloadMenu = true
@@ -111,7 +111,7 @@ struct DownloadOverlayView: View {
                 })
             }
             .padding()
-            .background(Color.white)
+            .background(Color.systemBackground)
             .cornerRadius(8)
             .padding()
             
@@ -119,7 +119,8 @@ struct DownloadOverlayView: View {
         }
         .onAppear {
             geocoder = CLGeocoder()
-            geocoder?.reverseGeocodeLocation(.init(latitude: mapRegion.center.latitude, longitude: mapRegion.center.longitude)) { places, error in
+            geocoder?.reverseGeocodeLocation(.init(latitude: mapChangeEvent.region.center.latitude,
+                                                   longitude: mapChangeEvent.region.center.longitude)) { places, error in
                 if let match = places?.first, name == "" {
                     name = match.locality ?? match.country ?? match.inlandWater ?? match.ocean ?? ""
                 }
@@ -150,16 +151,18 @@ func getSafeArea() -> UIEdgeInsets {
 }
 
 struct DownloadOverlayView_Previews: PreviewProvider {
-    static let region = MKCoordinateRegion(center: .init(latitude: 1, longitude: 1),
-                                    span: .init(latitudeDelta: 0.01, longitudeDelta: 0.01))
+    static let mapChangeEvent = MapRegionChangeEvent(reason: .app,
+                                                     region: MKCoordinateRegion(center: .init(latitude: 1, longitude: 1),
+                                                                                span: .init(latitudeDelta: 0.01,
+                                                                                            longitudeDelta: 0.01)))
     static var previews: some View {
         Group {
             DownloadOverlayView(showDownloadMenu: .constant(false),
                                 showNewDownloadOverlayView: .constant(false),
-                                mapRegion: .constant(region))
+                                mapChangeEvent: .constant(mapChangeEvent))
             DownloadOverlayView(showDownloadMenu: .constant(false),
                                 showNewDownloadOverlayView: .constant(false),
-                                mapRegion: .constant(region),
+                                mapChangeEvent: .constant(mapChangeEvent),
                                 showNameField: true)
         }
         .background(Color.yellow)

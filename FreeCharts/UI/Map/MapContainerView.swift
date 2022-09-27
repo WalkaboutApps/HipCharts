@@ -8,16 +8,15 @@
 import SwiftUI
 import MapKit
 
-private let mapRegionDefaultsKey = "MapRegion"
-
 struct MapContainerView: View {
     
-    @AppStorage("chartFontSize") var chartFontSize = ChartFontSize.medium
+    @AppStorage("chartTextSize") var chartTextSize = ChartTextSize.medium
     @SceneStorage("showCharts") var showChartsUserPreference = true
     @SceneStorage("baseMap") var baseMapType = MapType.standard
-    @SceneStorage("mapRegion") var mapRegion: MapRegion = app.dependencies.defaults.codable(forKey: mapRegionDefaultsKey) ?? .init()
+    @SceneStorage("mapChangeEvent") var mapChangeEvent = MapRegionChangeEvent(reason: .app, region: .init())
     
     @State var showCharts = false
+    @State var userLocationTracking = UserLocationTracking.none
     @State var showDownloadMenu = false
     @State var showNewDownloadOverlay = false
     @State var showSettingsMenu = false
@@ -37,14 +36,9 @@ struct MapContainerView: View {
         ZStack(alignment: .bottomTrailing) {
             MapView(showCharts: showCharts,
                     baseMap: baseMapType,
-                    chartFontSize: chartFontSize,
-                    mapRegion: Binding(get: { mapRegion },
-                                       set: {
-                if mapRegion != $0 {
-                    defaults.setCodable(mapRegion, forKey: mapRegionDefaultsKey)
-                    mapRegion = $0
-                }
-            }))
+                    chartTextSize: chartTextSize,
+                    mapChangeEvent: $mapChangeEvent,
+                    userLocationTracking: $userLocationTracking)
                 .ignoresSafeArea()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             
@@ -54,12 +48,13 @@ struct MapContainerView: View {
                         showDownloadMenu: $showDownloadMenu,
                         showSettingsMenu: $showSettingsMenu,
                         showNewDownloadOverlayView: $showNewDownloadOverlay,
-                        mapRegion: $mapRegion)
+                        mapChangeEvent: $mapChangeEvent,
+                        userLocationTracking: $userLocationTracking)
             
             if showNewDownloadOverlay {
                 DownloadOverlayView(showDownloadMenu: $showDownloadMenu,
                                     showNewDownloadOverlayView: $showNewDownloadOverlay,
-                                    mapRegion: $mapRegion)
+                                    mapChangeEvent: $mapChangeEvent)
             }
             
             if !showCharts && showChartsUserPreference {

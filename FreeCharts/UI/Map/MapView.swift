@@ -8,9 +8,16 @@
 import SwiftUI
 import MapKit
 
-typealias MapRegion = MKCoordinateRegion
+typealias UserLocationTracking = MKUserTrackingMode
 enum MapType: Int, Codable {
     case standard, satellite, hybrid, satelliteFlyover, hybridFlyover, mutedStandard
+}
+
+struct MapRegionChangeEvent: CodableAndRawRepresentable {
+    enum Reason: Int, Codable { case map, app }
+    let reason: Reason
+    let region: MKCoordinateRegion
+    var animated: Bool = false
 }
 
 struct MapView: UIViewRepresentable {
@@ -18,17 +25,24 @@ struct MapView: UIViewRepresentable {
     
     let showCharts: Bool
     let baseMap: MapType
-    let chartFontSize: ChartFontSize
-    @Binding var mapRegion: MapRegion
+    let chartTextSize: ChartTextSize
+    @Binding var mapChangeEvent: MapRegionChangeEvent
+    @Binding var userLocationTracking: UserLocationTracking
         
     func makeUIView(context: Context) -> MKMapView {
         let view = MKMapView()
+        view.region = mapChangeEvent.region
+        view.showsUserLocation = true
+        view.setCameraZoomRange(
+            .init(minCenterCoordinateDistance: metersPerTileAtEquator(zoomLevel: ChartTileOverlay.maximumZ)
+                 ),
+            animated: false)
         view.delegate = context.coordinator
         return view
     }
     
     func makeCoordinator() -> Coordinator {
-        .init(mapRegion: $mapRegion)
+        .init(mapChangeEvent: $mapChangeEvent, userLocationTracking: $userLocationTracking)
     }
     
     
@@ -36,18 +50,21 @@ struct MapView: UIViewRepresentable {
         // chart visibility
         let visibleChartOverlay = view.overlays.first(where: { $0 is ChartTileOverlay })
         if showCharts && visibleChartOverlay == nil {
-            view.addOverlay(ChartTileOverlay(fontSize: chartFontSize))
+            view.addOverlay(ChartTileOverlay(textSize: chartTextSize))
         } else if !showCharts, let overlay = visibleChartOverlay {
             view.removeOverlay(overlay)
         }
         
-        view.mapType = baseMap.mkMapType
-        view.setCameraZoomRange(
-            .init(minCenterCoordinateDistance: metersPerTileAtEquator(zoomLevel: ChartTileOverlay.maximumZ)
-                 ),
-            animated: false)
-        if mapRegion.span.latitudeDelta != 0 {
-            view.region = mapRegion
+        if baseMap.mkMapType != view.mapType {
+            view.mapType = baseMap.mkMapType
+        }
+        
+        if mapChangeEvent.reason != .map, mapChangeEvent.region.span.latitudeDelta != 0 {
+            view.setRegion(mapChangeEvent.region, animated: mapChangeEvent.animated)
+        }
+        
+        if view.userTrackingMode != userLocationTracking {
+            view.setUserTrackingMode(userLocationTracking, animated: true)
         }
     }
 }
@@ -58,10 +75,12 @@ func metersPerTileAtEquator(zoomLevel: Int) -> CLLocationDistance {
 
 extension MapView {
     class Coordinator: NSObject, MKMapViewDelegate {
-        @Binding var mapRegion: MapRegion
+        @Binding var mapChangeEvent: MapRegionChangeEvent
+        @Binding var userLocationTracking: UserLocationTracking
         
-        init(mapRegion: Binding<MapRegion>) {
-            _mapRegion = mapRegion
+        init(mapChangeEvent: Binding<MapRegionChangeEvent>, userLocationTracking: Binding<UserLocationTracking>) {
+            _mapChangeEvent = mapChangeEvent
+            _userLocationTracking = userLocationTracking
         }
         
         func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
@@ -69,7 +88,12 @@ extension MapView {
         }
         
         func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-            mapRegion = mapView.region
+            if mapView.userTrackingMode != userLocationTracking {
+                userLocationTracking = mapView.userTrackingMode
+            }
+            DispatchQueue.main.async {
+                self.mapChangeEvent = .init(reason: .map, region: mapView.region)
+            }
         }
     }
 }
@@ -95,6 +119,10 @@ extension MapType {
 
 struct MapView_Previews: PreviewProvider {
     static var previews: some View {
-        MapView(showCharts: true, baseMap: .standard, chartFontSize: .medium, mapRegion: .constant(.init()))
+        MapView(showCharts: true,
+                baseMap: .standard,
+                chartTextSize: .medium,
+                mapChangeEvent: .constant(.init(reason: .map, region: .init())),
+                userLocationTracking: .constant(.none))
     }
 }

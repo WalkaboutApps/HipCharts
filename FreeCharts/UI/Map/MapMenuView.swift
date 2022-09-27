@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreLocation
 
 struct MapMenuView: View {
     
@@ -16,10 +17,13 @@ struct MapMenuView: View {
     @Binding var showDownloadMenu: Bool
     @Binding var showSettingsMenu: Bool
     @Binding var showNewDownloadOverlayView: Bool
-    @Binding var mapRegion: MapRegion
+    @Binding var mapChangeEvent: MapRegionChangeEvent
+    @Binding var userLocationTracking: UserLocationTracking
     
+    let iconWidth: CGFloat = 22
+
     var body: some View {
-        VStack {
+        VStack(alignment: .trailing) {
             if showMapTypeView {
                 mapTypeView
             }
@@ -28,18 +32,43 @@ struct MapMenuView: View {
                 VStack(spacing: 0) {
                     
                     Button {
-                        showMapTypeView.toggle()
+                        withAnimation {
+                            requestLocationPermissionIfNeeded()
+                            switch userLocationTracking {
+                            case .none:
+                                userLocationTracking = .follow
+                            case .follow:
+                                userLocationTracking = .followWithHeading
+                            case .followWithHeading:
+                                userLocationTracking = .follow
+                            @unknown default:
+                                userLocationTracking = .none
+                            }
+                        }
                     } label: {
-                        Image(systemName: "square.3.layers.3d.down.right")
+                        Image(systemName: "location")
+                            .resizable()
+                            .frame(width: iconWidth, height: iconWidth)
                             .padding()
                     }
                     
+//                    Button {
+//                        showMapTypeView.toggle()
+//                    } label: {
+//                        Image(systemName: "square.3.layers.3d.down.left")
+//                            .resizable()
+//                            .frame(width: iconWidth, height: iconWidth)
+//                            .padding()
+//                    }
+                    
                     NavigationLink(isActive: $showDownloadMenu) {
                         DownloadMenuView(showNewDownloadOverlay: $showNewDownloadOverlayView,
-                                                      showDownloadMenu: $showDownloadMenu,
-                                                      mapRegion: $mapRegion)
+                                         showDownloadMenu: $showDownloadMenu,
+                                         mapChangeEvent: $mapChangeEvent)
                     } label: {
                         Image(systemName: "square.and.arrow.down.on.square")
+                            .resizable()
+                            .frame(width: iconWidth, height: iconWidth)
                             .padding()
                     }
                     
@@ -47,14 +76,16 @@ struct MapMenuView: View {
                         MapSettingsMenuView(baseMapType: $baseMapType, showCharts: $showCharts)
                     } label: {
                         Image(systemName: "gearshape")
+                            .resizable()
+                            .frame(width: iconWidth, height: iconWidth)
                             .padding()
                     }
                     
                 }
-                .background(RoundedRectangle(cornerRadius: 8).fill(Color.white.opacity(0.7)))
+                .background(RoundedRectangle(cornerRadius: 8).fill(Color.systemBackground.opacity(0.7)))
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
-                        .stroke(Color.white, lineWidth: 1)
+                        .stroke(Color.systemBackground, lineWidth: 1)
                 )
             }
         }
@@ -69,15 +100,22 @@ struct MapMenuView: View {
                 showCharts.toggle()
                 showMapTypeView.toggle()
             } label: {
-                Text("C")
-                    .padding()
+                ZStack {
+                    Image("map-type-chart")
+                        .padding()
+                        .opacity(0.6)
+                    Image(systemName: showCharts ? "eye.slash" : "eye")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 32)
+                }
             }
             
             Button {
                 baseMapType = .standard
                 showMapTypeView.toggle()
             } label: {
-                Text("S")
+                Image("map-type-standard")
                     .padding()
             }
             
@@ -85,15 +123,22 @@ struct MapMenuView: View {
                 baseMapType = .satellite
                 showMapTypeView.toggle()
             } label: {
-                Text("S")
+                Image("map-type-satellite")
                     .padding()
             }
         }
-        .background(Color.white.opacity(0.7))
+        .background(Color.systemBackground.opacity(0.7))
         .overlay(
             RoundedRectangle(cornerRadius: 8)
-                .stroke(Color.white, lineWidth: 1)
+                .stroke(Color.systemBackground, lineWidth: 1)
         )
+    }
+}
+
+func requestLocationPermissionIfNeeded() {
+    let manager = CLLocationManager()
+    if manager.authorizationStatus == .notDetermined {
+        manager.requestWhenInUseAuthorization()
     }
 }
 

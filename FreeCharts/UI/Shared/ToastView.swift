@@ -9,8 +9,6 @@ import Foundation
 import SwiftUI
 
 struct Toast: ViewModifier {
-    // these correspond to Android values f
-    // or DURATION_SHORT and DURATION_LONG
     static let short: TimeInterval = 2
     static let long: TimeInterval = 3.5
     
@@ -20,36 +18,40 @@ struct Toast: ViewModifier {
     func body(content: Content) -> some View {
         ZStack {
             content
-            toastView
+            if let message = message {
+                toastView(message: message)
+            }
         }
     }
     
-    private var toastView: some View {
+    private func toastView(message: String) -> some View {
         VStack {
             if let message = message {
-                Group {
-                    Text(message)
-                        .multilineTextAlignment(.center)
-                        .foregroundColor(config.textColor)
-                        .font(config.font)
-                        .padding(8)
-                }
-                .background(config.backgroundColor)
-                .cornerRadius(8)
-                .onTapGesture {
-                    self.message = nil
-                }
-                .onAppear {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + config.duration) {
+                Text(message)
+                    .multilineTextAlignment(.center)
+                    .foregroundColor(config.textColor)
+                    .font(config.font)
+                    .padding()
+                    .cornerRadius(8)
+                    .onTapGesture {
                         self.message = nil
                     }
-                }
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + config.duration) {
+                            self.message = nil
+                        }
+                    }
             }
-            Spacer()
+            Spacer(minLength: 0)
         }
         .padding(.horizontal, 16)
-        .padding(.bottom, 18)
-        .animation(config.animation, value: message != nil)
+        .background(
+            RoundedRectangle(cornerRadius: 8).stroke(config.borderColor)
+                .background(
+                    RoundedRectangle(cornerRadius: 8).fill(config.backgroundColor)
+                )
+        )
+        .animation(config.animation)
         .transition(config.transition)
     }
     
@@ -57,19 +59,22 @@ struct Toast: ViewModifier {
         let textColor: Color
         let font: Font
         let backgroundColor: Color
+        let borderColor: Color
         let duration: TimeInterval
         let transition: AnyTransition
         let animation: Animation
         
-        init(textColor: Color = .white,
-             font: Font = .system(size: 14),
-             backgroundColor: Color = .black.opacity(0.588),
+        init(textColor: Color = .label,
+             font: Font = .body,
+             backgroundColor: Color = .systemBackground.opacity(0.9),
+             borderColor: Color = .systemBackground,
              duration: TimeInterval = Toast.short,
-             transition: AnyTransition = .opacity,
+             transition: AnyTransition = .move(edge: .top),
              animation: Animation = .linear(duration: 0.3)) {
             self.textColor = textColor
             self.font = font
             self.backgroundColor = backgroundColor
+            self.borderColor = borderColor
             self.duration = duration
             self.transition = transition
             self.animation = animation

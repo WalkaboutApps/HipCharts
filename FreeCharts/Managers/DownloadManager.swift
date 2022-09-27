@@ -18,6 +18,7 @@ struct DownloadArea: Codable {
     let id: UUID
     var name: String?
     let region: MKCoordinateRegion
+    var date = Date()
     var status: Status
     var sizeBytes: Int?
 }
@@ -64,6 +65,7 @@ class DownloadManager {
     @discardableResult
     func createAndDownloadNewArea(region: MKCoordinateRegion, name: String?) -> Result<DownloadArea, DisplayError> {
         let area = DownloadArea(id: UUID(), name: name, region: region, status: .downloading)
+        downloadedAreas.value.append(area)
         return download(area: area).map { area }
     }
     
@@ -75,7 +77,7 @@ class DownloadManager {
         }
         
         let neededTiles = neededTiles(region: area.region)
-        let overlay = ChartTileOverlay(fontSize: .medium)
+        let overlay = ChartTileOverlay(textSize: .medium)
         Publishers.MergeMany(neededTiles.map { [unowned self] (tilePath) -> AnyPublisher<TilePath, DisplayError> in
             let to = downloadFileURL(downloadDir: downloadDir, tilePath: tilePath)
             if !refreshCachedFiles && fileManager.fileExists(atPath: to.path) {
@@ -102,8 +104,7 @@ class DownloadManager {
         })
         .store(in: &cancellables)
         
-        downloadedAreas.value.append(area)
-        
+                
         return .success(())
     }
     
@@ -150,32 +151,41 @@ class DownloadManager {
                         try self.fileManager.removeItem(at: url)
                     }
                 }
+                
+                return tilesToRemove
             }
             .catch {
                 Fail(error: DisplayError(anyError: $0, defaultDisplayString: "Failed to remove downloaded area"))
             }
             .receive(on: DispatchQueue.main)
-            .map {
+            .map { (removedTiles: Set<TilePath>) -> Void in 
                 self.downloadedAreas.value.removeAll { $0.id == area.id }
+                self.downloadedTiles.value = self.downloadedTiles.value.subtracting(removedTiles)
             }
             .eraseToAnyPublisher()
     }
     
     // MARK: - Initialize
     
-    private func initializeInBackgroundQueue() {
-        
+    private func loadTilePathsOfCachedFilesOnBackgroundQueue() -> Result<Set<TilePath>, DisplayError> {
         // load list of downloaded tiles from documents directory.
-        var tilePaths = Set<TilePath>()
-        if case .success(let url) = self.getTileCacheDir() {
+        return self.getTileCacheDir().flatMap { url in
             do {
                 let files = try self.fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: nil)
-                tilePaths = Set(files.compactMap { tilePath(downloadFileURL: $0) })
+                return .success(Set(files.compactMap { tilePath(downloadFileURL: $0) }))
             } catch {
-                logger.log("Unable to read cache directory.")
+                return .failure(.init(anyError: error, defaultDisplayString: "Failed to read contents of cache dir."))
             }
-        } else {
-            logger.log("Unable to read cache directory. \(self.getTileCacheDir().error?.debugDescription ?? "null")")
+        }
+    }
+    
+    private func initializeInBackgroundQueue() {
+        var tilePaths = Set<TilePath>()
+        switch loadTilePathsOfCachedFilesOnBackgroundQueue() {
+        case .success(let paths):
+            tilePaths = paths
+        case .failure(let error):
+            logger.log("Download Manager init failed: \(error)")
         }
         
         // load areas
@@ -202,7 +212,7 @@ class DownloadManager {
                 case .complete:
                     var updated = area
                     updated.status = neededTiles.allSatisfy(tilePaths.contains) ?
-                        .complete : .failed(errorString: "Download removed")
+                        .complete : .failed(errorString: "Files missing")
                     return updated
                 case .failed(errorString: let errorString):
                     var updated = area
@@ -220,6 +230,7 @@ class DownloadManager {
             self.downloadedTiles.send(tilePaths)
             self.downloadedAreas.value = areas
             self.cacheReady.send(true)
+            self.purgeStrayCacheFiles()
         }
     }
     
@@ -239,6 +250,7 @@ class DownloadManager {
                     var updated = area
                     updated.status = .complete
                     updated.sizeBytes = calculateAreaFileSizeBytes(area: area)
+                    updated.date = Date()
                     return updated
                 default:
                     return area
@@ -308,6 +320,55 @@ class DownloadManager {
                     return Int(bytes ?? 0)
                 }
                 .reduce(0) { $0 + $1 }
+    }
+    
+    // MARK: - Cleanup
+    
+    private func purgeStrayCacheFiles() {
+        downloadedAreas.first()
+            .receive(on: diskQueue)
+            .tryMap { [weak self] areas in
+                guard let self = self, case .success(let dir) = self.getTileCacheDir() else {
+                    throw self?.getTileCacheDir().error ?? .init(displayString: "Failed to get cache dir")
+                }
+                let allTiles = areas.flatMap { neededTiles(region: $0.region) }
+                var cleanedCount = 0
+                try self.fileManager.contentsOfDirectory(atPath: dir.path).forEach { path in
+                    let url = dir.appendingPathComponent(path)
+                    guard let tilePath = tilePath(downloadFileURL: url) else {
+                        logger.log("Failed to create tile path for file in cache dir: \(path). Skipping...")
+                        return
+                    }
+                    if !allTiles.contains(tilePath) {
+                        do {
+                            try self.fileManager.removeItem(at: url)
+                            cleanedCount += 1
+                        } catch {
+                            logger.log("Failed to remove file in cache dir: \(path): \(error). Skipping...")
+                        }
+                    }
+                }
+                
+                var tilePaths = Set<TilePath>()
+                switch self.loadTilePathsOfCachedFilesOnBackgroundQueue() {
+                case .success(let paths):
+                    tilePaths = paths
+                case .failure(let error):
+                    throw error
+                }
+                
+                return tilePaths
+            }
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                if case .failure(let error) = completion {
+                    logger.log("Failed to clean cache Dir: \(error)")
+                }
+            }, receiveValue: { (remainingTiles: Set<TilePath>) -> Void in
+                self.downloadedTiles.value = remainingTiles
+                logger.log("Finished cleaning stray tiles from cache dir.")
+            })
+            .store(in: &cancellables)
     }
 }
 
