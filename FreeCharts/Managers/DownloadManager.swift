@@ -25,7 +25,7 @@ struct DownloadArea: Codable {
 
 private func defaultURLSession() -> URLSession {
     let config = URLSessionConfiguration.default
-    config.httpMaximumConnectionsPerHost = 10
+    config.httpMaximumConnectionsPerHost = 20
     return .init(configuration: config)
 }
 
@@ -39,6 +39,7 @@ class DownloadManager {
     private let urlSession: URLSession
     private let defaults: UserDefaults
     private let downloadedTiles = CurrentValueSubject<Set<TilePath>, Never>([])
+    private let diskQueue = DispatchQueue(label: "Disk Queue", qos: .utility)
     private var cancellables = CancellableSet()
         
     init(fileManager: FileManager = .default,
@@ -63,46 +64,54 @@ class DownloadManager {
     }
     
     @discardableResult
-    func createAndDownloadNewArea(region: MKCoordinateRegion, name: String?) -> Result<DownloadArea, DisplayError> {
+    func createAndDownloadNewArea(region: MKCoordinateRegion,
+                                  name: String?,
+                                  chartOptions: MapState.Options.Chart) -> Result<DownloadArea, DisplayError> {
         let area = DownloadArea(id: UUID(), name: name, region: region, status: .downloading)
         downloadedAreas.value.append(area)
-        return download(area: area).map { area }
+        return download(area: area, chartOptions: chartOptions).map { area }
     }
     
     @discardableResult
-    func download(area: DownloadArea, refreshCachedFiles: Bool = true) -> Result<Void, DisplayError> {
+    func download(area: DownloadArea,
+                  chartOptions: MapState.Options.Chart,
+                  refreshCachedFiles: Bool = true) -> Result<Void, DisplayError> {
         let r = getTileCacheDir()
         guard case .success(let downloadDir) = r else {
             return .failure(r.error!)
         }
         
-        let neededTiles = neededTiles(region: area.region)
-        let overlay = ChartTileOverlay(textSize: .medium)
-        Publishers.MergeMany(neededTiles.map { [unowned self] (tilePath) -> AnyPublisher<TilePath, DisplayError> in
-            let to = downloadFileURL(downloadDir: downloadDir, tilePath: tilePath)
-            if !refreshCachedFiles && fileManager.fileExists(atPath: to.path) {
-                return Just(tilePath)
-                    .setFailureType(to: DisplayError.self)
-                    .eraseToAnyPublisher()
+        Just(())
+            .subscribe(on: diskQueue)
+            .flatMap {
+                let neededTiles = neededTiles(region: area.region)
+                let overlay = ChartTileOverlay(options: chartOptions)
+                return Publishers.MergeMany(neededTiles.map { [unowned self] (tilePath) -> AnyPublisher<TilePath, DisplayError> in
+                    let to = downloadFileURL(downloadDir: downloadDir, tilePath: tilePath)
+                    if !refreshCachedFiles && self.fileManager.fileExists(atPath: to.path) {
+                        return Just(tilePath)
+                            .setFailureType(to: DisplayError.self)
+                            .eraseToAnyPublisher()
+                    }
+                    return self.downloadTile(from: overlay.url(forTilePath: tilePath), to: to)
+                        .retry(3)
+                        .map { tilePath }
+                        .eraseToAnyPublisher()
+                })
             }
-            return self.downloadTile(from: overlay.url(forTilePath: tilePath), to: to)
-                .retry(3)
-                .map { tilePath }
-                .eraseToAnyPublisher()
-        })
-        .receive(on: DispatchQueue.main)
-        .sink(receiveCompletion: { [weak self] completion in
-            if case .failure(let error) = completion {
-                // todo Display global error
-                logger.log("Download Area failed: \(error)")
-                self?.updateDownloadAreaStatuses(event: .failed((area.id, error)))
-            } else {
-                self?.updateDownloadAreaStatuses(event: .complete(area.id))
-            }
-        }, receiveValue: {
-            [weak self] in self?.downloadedTiles.value.insert($0)
-        })
-        .store(in: &cancellables)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case .failure(let error) = completion {
+                    // todo Display global error
+                    logger.log("Download Area failed: \(error)")
+                    self?.updateDownloadAreaStatuses(event: .failed((area.id, error)))
+                } else {
+                    self?.updateDownloadAreaStatuses(event: .complete(area.id))
+                }
+            }, receiveValue: {
+                [weak self] in self?.downloadedTiles.value.insert($0)
+            })
+            .store(in: &cancellables)
         
                 
         return .success(())
@@ -263,7 +272,6 @@ class DownloadManager {
         }
     }
     
-    let diskQueue = DispatchQueue(label: "Disk Queue", qos: .background)
     private func downloadTile(from: URL, to: URL) -> AnyPublisher<Void, DisplayError> {
         urlSession.dataTaskPublisher(for: from)
             .receive(on: diskQueue)

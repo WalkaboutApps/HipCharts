@@ -18,6 +18,7 @@ struct DownloadAreaListCell: View {
     
     let area: DownloadArea
     let index: Int
+    let chartOptions: MapState.Options.Chart
     let onShowOnMap: () -> Void
     
     @State var downloadProgress: Float?
@@ -52,7 +53,7 @@ struct DownloadAreaListCell: View {
                     
                         
                         Button {
-                            manager.download(area: area)
+                            manager.download(area: area, chartOptions: chartOptions)
                             downloadProgress = 0
                         } label: {
                             Text("Update")
@@ -106,8 +107,8 @@ struct DownloadAreaListCell_Previews: PreviewProvider {
     static let area2 = DownloadArea(id: .init(), name: nil, region: region, status: .complete, sizeBytes: 1300000)
     static var previews: some View {
         List {
-            DownloadAreaListCell(area: area, index: 44, onShowOnMap: { })
-            DownloadAreaListCell(area: area2, index: 45, onShowOnMap: { })
+            DownloadAreaListCell(area: area, index: 44, chartOptions: .init(), onShowOnMap: { })
+            DownloadAreaListCell(area: area2, index: 45, chartOptions: .init(), onShowOnMap: { })
         }
     }
 }

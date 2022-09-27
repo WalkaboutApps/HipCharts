@@ -9,17 +9,13 @@ import SwiftUI
 import MapKit
 
 struct MapContainerView: View {
+    @SceneStorage("mapSceneState") var state = MapState()
     
-    @AppStorage("chartTextSize") var chartTextSize = ChartTextSize.medium
-    @SceneStorage("showCharts") var showChartsUserPreference = true
-    @SceneStorage("baseMap") var baseMapType = MapType.standard
-    @SceneStorage("mapChangeEvent") var mapChangeEvent = MapRegionChangeEvent(reason: .app, region: .init())
-    
-    @State var showCharts = false
     @State var userLocationTracking = UserLocationTracking.none
     @State var showDownloadMenu = false
     @State var showNewDownloadOverlay = false
     @State var showSettingsMenu = false
+    @State var isLoadingCharts = true
     
     var defaults = app.dependencies.defaults
     var downloadManager = app.dependencies.downloadManager
@@ -34,30 +30,28 @@ struct MapContainerView: View {
     
     var map: some View {
         ZStack(alignment: .bottomTrailing) {
-            MapView(showCharts: showCharts,
-                    baseMap: baseMapType,
-                    chartTextSize: chartTextSize,
-                    mapChangeEvent: $mapChangeEvent,
+            MapView(state: $state,
                     userLocationTracking: $userLocationTracking)
                 .ignoresSafeArea()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             
-            MapMenuView(showMenu: !showNewDownloadOverlay,
-                        showCharts: $showCharts,
-                        baseMapType: $baseMapType,
-                        showDownloadMenu: $showDownloadMenu,
-                        showSettingsMenu: $showSettingsMenu,
-                        showNewDownloadOverlayView: $showNewDownloadOverlay,
-                        mapChangeEvent: $mapChangeEvent,
-                        userLocationTracking: $userLocationTracking)
+            if !showNewDownloadOverlay {
+                MapMenuView(state: $state,
+                            showDownloadMenu: $showDownloadMenu,
+                            showSettingsMenu: $showSettingsMenu,
+                            showNewDownloadOverlayView: $showNewDownloadOverlay,
+                            userLocationTracking: $userLocationTracking)
+            }
             
             if showNewDownloadOverlay {
                 DownloadOverlayView(showDownloadMenu: $showDownloadMenu,
                                     showNewDownloadOverlayView: $showNewDownloadOverlay,
-                                    mapChangeEvent: $mapChangeEvent)
+                                    mapChangeEvent: $state.regionChangeEvent,
+                                    chartOptions: state.options.chart)
             }
             
-            if !showCharts && showChartsUserPreference {
+            if isLoadingCharts && state.options.map.showCharts {
+                // show loader while charts load in background
                 VStack {
                     Spacer()
                     HStack {
@@ -71,7 +65,7 @@ struct MapContainerView: View {
         }
         .background(Color.black)
         .onReceive(downloadManager.cacheReady.dropFirst()) {
-            showCharts = $0 && showChartsUserPreference
+            isLoadingCharts = !$0
         }
     }
 }

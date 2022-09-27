@@ -9,34 +9,38 @@ import Foundation
 import MapKit
 
 enum ChartTextSize: Int, Codable, CaseIterable {
-    case large = 360
-    case medium = 180
     case small = 90
+    case medium = 180
+    case large = 360
 }
 
 class ChartTileOverlay: MKTileOverlay {
-    static let minimumZ = 0
+    static let minimumZ = 3
     static let maximumZ = 17
     
-    let textSize: ChartTextSize
+    let options: MapState.Options.Chart
     
     private let downloadManager: DownloadManager
     
-    required init(textSize: ChartTextSize,
+    required init(options: MapState.Options.Chart,
                   downloadManager: DownloadManager = app.dependencies.downloadManager) {
-        self.textSize = textSize
+        self.options = options
         self.downloadManager = downloadManager
         super.init(urlTemplate: nil)
         
         maximumZ = Self.maximumZ
+        minimumZ = Self.minimumZ
     }
     
     override func url(forTilePath path: MKTileOverlayPath) -> URL {
-        let dpi = textSize.rawValue
+        let dpi = options.highQuality ? options.textSize.rawValue : options.textSize.rawValue / 2
+        let warningLayersParam = options.showChartAreasAndLimits ? "&layers=show%3A2%2C3%2C4%2C5%2C6%2C7" : ""
+        let tileWidth = Int(options.highQuality ? tileSize.width : tileSize.width / 2)
+
         let (minY, maxX) = convertToWebMercator(coordinate: topLeftCoordinateOfXYZTile(x: path.x, y: path.y, z: path.z))
         let (maxY, minX) = convertToWebMercator(coordinate: topLeftCoordinateOfXYZTile(x: path.x + 1, y: path.y + 1, z: path.z))
         
-        let urlString = "https://gis.charttools.noaa.gov/arcgis/rest/services/MCS/NOAAChartDisplay/MapServer/exts/MaritimeChartService/MapServer/export?f=image&format=PNG32&transparent=true&layers=show%3A2%2C3%2C4%2C5%2C6%2C7&format=png8&size=\(tileSize.width)%2C\(tileSize.height)&bbox=\(minY)%2C\(minX)%2C\(maxY)%2C\(maxX)&bboxsr=3857&imagesr=3857&dpi=\(dpi)&transparent=true"
+        let urlString = "https://gis.charttools.noaa.gov/arcgis/rest/services/MCS/NOAAChartDisplay/MapServer/exts/MaritimeChartService/MapServer/export?transparent=true\(warningLayersParam)&size=\(tileWidth)%2C\(tileWidth)&bbox=\(minY)%2C\(minX)%2C\(maxY)%2C\(maxX)&bboxsr=3857&imagesr=3857&dpi=\(dpi)&transparent=true"
         return URL(string: urlString)!
     }
     

@@ -36,6 +36,9 @@
 		CF65A13E28D79D56004B241B /* MapSettingsMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF65A13D28D79D56004B241B /* MapSettingsMenuView.swift */; };
 		CF65A14128D7B27B004B241B /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF65A14028D7B27B004B241B /* ToastView.swift */; };
 		CF65A14428D7EB65004B241B /* Color+UISystemColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF65A14328D7EB65004B241B /* Color+UISystemColors.swift */; };
+		CF859ED428E37AD7005C9FD4 /* Codable+RawRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF859ED328E37AD7005C9FD4 /* Codable+RawRepresentable.swift */; };
+		CF859ED828E37E9B005C9FD4 /* MapRegionChangeEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF859ED728E37E9B005C9FD4 /* MapRegionChangeEvent.swift */; };
+		CF859EDA28E382F4005C9FD4 /* MapState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF859ED928E382F4005C9FD4 /* MapState.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,6 +91,9 @@
 		CF65A13D28D79D56004B241B /* MapSettingsMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSettingsMenuView.swift; sourceTree = "<group>"; };
 		CF65A14028D7B27B004B241B /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 		CF65A14328D7EB65004B241B /* Color+UISystemColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+UISystemColors.swift"; sourceTree = "<group>"; };
+		CF859ED328E37AD7005C9FD4 /* Codable+RawRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Codable+RawRepresentable.swift"; sourceTree = "<group>"; };
+		CF859ED728E37E9B005C9FD4 /* MapRegionChangeEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapRegionChangeEvent.swift; sourceTree = "<group>"; };
+		CF859ED928E382F4005C9FD4 /* MapState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +122,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CF0A46B528E2C91D00BB0B6B /* PNG Compression */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "PNG Compression";
+			sourceTree = "<group>";
+		};
 		CF143BFB28D51DA100904E7E = {
 			isa = PBXGroup;
 			children = (
@@ -198,7 +211,7 @@
 		CF65A11A28D631C0004B241B /* Download */ = {
 			isa = PBXGroup;
 			children = (
-				CF143C3B28D57C8400904E7E /* DownloadOverlayView.swift */,
+				CF859EDB28E39790005C9FD4 /* New Download Overlay */,
 				CF65A13128D692E2004B241B /* DownloadMenuView.swift */,
 				CF65A13328D6BC2E004B241B /* DownloadAreaListCell.swift */,
 			);
@@ -219,6 +232,7 @@
 			isa = PBXGroup;
 			children = (
 				CF65A12128D6561F004B241B /* MKCoordinateRegion+Codable.swift */,
+				CF859ED328E37AD7005C9FD4 /* Codable+RawRepresentable.swift */,
 				CF65A12928D66D8E004B241B /* Result.swift */,
 				CF65A12B28D6737B004B241B /* URLResponse+Error.swift */,
 				CF65A12D28D67B39004B241B /* MKTileOverlayPath.swift */,
@@ -234,6 +248,7 @@
 			isa = PBXGroup;
 			children = (
 				CF65A11B28D631DE004B241B /* DownloadManager.swift */,
+				CF0A46B528E2C91D00BB0B6B /* PNG Compression */,
 				CF65A13728D6C565004B241B /* Logger.swift */,
 			);
 			path = Managers;
@@ -243,8 +258,10 @@
 			isa = PBXGroup;
 			children = (
 				CF143C3928D56D2100904E7E /* MapContainerView.swift */,
+				CF859ED928E382F4005C9FD4 /* MapState.swift */,
 				CF143C3728D5643400904E7E /* MapMenuView.swift */,
 				CF143C3228D51E7D00904E7E /* MapView.swift */,
+				CF859ED728E37E9B005C9FD4 /* MapRegionChangeEvent.swift */,
 				CF65A12528D65A12004B241B /* ChartTileOverlay.swift */,
 			);
 			path = Map;
@@ -264,6 +281,14 @@
 				CF65A13D28D79D56004B241B /* MapSettingsMenuView.swift */,
 			);
 			path = Settings;
+			sourceTree = "<group>";
+		};
+		CF859EDB28E39790005C9FD4 /* New Download Overlay */ = {
+			isa = PBXGroup;
+			children = (
+				CF143C3B28D57C8400904E7E /* DownloadOverlayView.swift */,
+			);
+			path = "New Download Overlay";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -409,13 +434,16 @@
 				CF65A13E28D79D56004B241B /* MapSettingsMenuView.swift in Sources */,
 				CF65A12A28D66D8E004B241B /* Result.swift in Sources */,
 				CF65A13228D692E2004B241B /* DownloadMenuView.swift in Sources */,
+				CF859ED828E37E9B005C9FD4 /* MapRegionChangeEvent.swift in Sources */,
 				CF65A12628D65A12004B241B /* ChartTileOverlay.swift in Sources */,
 				CF65A13428D6BC2E004B241B /* DownloadAreaListCell.swift in Sources */,
 				CF143C0828D51DA100904E7E /* Main.swift in Sources */,
 				CF65A13628D6BFAE004B241B /* UserDefaults+Codable.swift in Sources */,
 				CF65A12C28D6737B004B241B /* URLResponse+Error.swift in Sources */,
+				CF859EDA28E382F4005C9FD4 /* MapState.swift in Sources */,
 				CF65A12828D669E2004B241B /* DisplayError.swift in Sources */,
 				CF65A12228D6561F004B241B /* MKCoordinateRegion+Codable.swift in Sources */,
+				CF859ED428E37AD7005C9FD4 /* Codable+RawRepresentable.swift in Sources */,
 				CF65A13A28D79368004B241B /* SwiftUI+UserDefaults.swift in Sources */,
 				CF65A14428D7EB65004B241B /* Color+UISystemColors.swift in Sources */,
 				CF65A11C28D631DE004B241B /* DownloadManager.swift in Sources */,

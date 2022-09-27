@@ -13,25 +13,15 @@ enum MapType: Int, Codable {
     case standard, satellite, hybrid, satelliteFlyover, hybridFlyover, mutedStandard
 }
 
-struct MapRegionChangeEvent: CodableAndRawRepresentable {
-    enum Reason: Int, Codable { case map, app }
-    let reason: Reason
-    let region: MKCoordinateRegion
-    var animated: Bool = false
-}
-
 struct MapView: UIViewRepresentable {
     typealias UIViewType = MKMapView
     
-    let showCharts: Bool
-    let baseMap: MapType
-    let chartTextSize: ChartTextSize
-    @Binding var mapChangeEvent: MapRegionChangeEvent
+    @Binding var state: MapState
     @Binding var userLocationTracking: UserLocationTracking
         
     func makeUIView(context: Context) -> MKMapView {
         let view = MKMapView()
-        view.region = mapChangeEvent.region
+        view.region = state.regionChangeEvent.region
         view.showsUserLocation = true
         view.setCameraZoomRange(
             .init(minCenterCoordinateDistance: metersPerTileAtEquator(zoomLevel: ChartTileOverlay.maximumZ)
@@ -42,25 +32,30 @@ struct MapView: UIViewRepresentable {
     }
     
     func makeCoordinator() -> Coordinator {
-        .init(mapChangeEvent: $mapChangeEvent, userLocationTracking: $userLocationTracking)
+        .init(mapChangeEvent: $state.regionChangeEvent, userLocationTracking: $userLocationTracking)
     }
     
     
     func updateUIView(_ view: MKMapView, context: Context) {
         // chart visibility
-        let visibleChartOverlay = view.overlays.first(where: { $0 is ChartTileOverlay })
-        if showCharts && visibleChartOverlay == nil {
-            view.addOverlay(ChartTileOverlay(textSize: chartTextSize))
-        } else if !showCharts, let overlay = visibleChartOverlay {
+        let visibleChartOverlay = view.overlays.first(where: { $0 is ChartTileOverlay }) as? ChartTileOverlay
+        if state.options.map.showCharts && visibleChartOverlay == nil {
+            view.addOverlay(ChartTileOverlay(options: state.options.chart))
+        } else if state.options.map.showCharts,
+                  let overlay = visibleChartOverlay,
+                  state.options.chart != overlay.options {
+            view.removeOverlay(overlay)
+            view.addOverlay(ChartTileOverlay(options: state.options.chart))
+        } else if !state.options.map.showCharts, let overlay = visibleChartOverlay {
             view.removeOverlay(overlay)
         }
         
-        if baseMap.mkMapType != view.mapType {
-            view.mapType = baseMap.mkMapType
+        if state.options.map.baseMap.mkMapType != view.mapType {
+            view.mapType = state.options.map.baseMap.mkMapType
         }
         
-        if mapChangeEvent.reason != .map, mapChangeEvent.region.span.latitudeDelta != 0 {
-            view.setRegion(mapChangeEvent.region, animated: mapChangeEvent.animated)
+        if state.regionChangeEvent.reason != .map, state.regionChangeEvent.region.span.latitudeDelta != 0 {
+            view.setRegion(state.regionChangeEvent.region, animated: state.regionChangeEvent.animated)
         }
         
         if view.userTrackingMode != userLocationTracking {
@@ -119,10 +114,6 @@ extension MapType {
 
 struct MapView_Previews: PreviewProvider {
     static var previews: some View {
-        MapView(showCharts: true,
-                baseMap: .standard,
-                chartTextSize: .medium,
-                mapChangeEvent: .constant(.init(reason: .map, region: .init())),
-                userLocationTracking: .constant(.none))
+        MapView(state: .constant(.init()), userLocationTracking: .constant(.none))
     }
 }

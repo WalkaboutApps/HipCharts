@@ -14,25 +14,9 @@
             filePath = "FreeCharts/Managers/DownloadManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "98"
-            endingLineNumber = "98"
-            landmarkName = "download(area:refreshCachedFiles:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "25893C71-E669-4592-93D8-364C2DA01288"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FreeCharts/UI/Map/ChartTileOverlay.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "40"
-            endingLineNumber = "40"
-            landmarkName = "url(forTilePath:)"
+            startingLineNumber = "107"
+            endingLineNumber = "107"
+            landmarkName = "download(area:chartOptions:refreshCachedFiles:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

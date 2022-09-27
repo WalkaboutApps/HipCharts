@@ -15,6 +15,7 @@ struct DownloadMenuView: View {
     @Binding var showNewDownloadOverlay: Bool
     @Binding var showDownloadMenu: Bool
     @Binding var mapChangeEvent: MapRegionChangeEvent
+    let chartOptions: ChartOptions
     
     @State var selection: UUID?
     
@@ -49,7 +50,9 @@ struct DownloadMenuView: View {
     var areasListView: some View {
         List() {
             ForEach(areas) { area in
-                DownloadAreaListCell(area: area, index: areas.firstIndex { $0.id == area.id }!) {
+                DownloadAreaListCell(area: area,
+                                     index: areas.firstIndex { $0.id == area.id }!,
+                                     chartOptions: chartOptions) {
                     mapChangeEvent = .init(reason: .app, region: area.region)
                     showDownloadMenu = false
                 }
@@ -109,11 +112,13 @@ struct DownloadMenuView_Previews: PreviewProvider {
         Group {
             DownloadMenuView(showNewDownloadOverlay: .constant(true),
                              showDownloadMenu: .constant(true),
-                             mapChangeEvent: .constant(mapChangeEvent))
+                             mapChangeEvent: .constant(mapChangeEvent),
+                             chartOptions: .init())
             
             DownloadMenuView(showNewDownloadOverlay: .constant(true),
                              showDownloadMenu: .constant(true),
                              mapChangeEvent: .constant(mapChangeEvent),
+                             chartOptions: .init(),
                              areas: [area, area2])
         }
     }

@@ -9,18 +9,16 @@ import SwiftUI
 
 struct MapSettingsMenuView: View {
     
-    @Binding var baseMapType: MapType
-    @Binding var showCharts: Bool
-    @AppStorage("chartTextSize") var chartTextSize = ChartTextSize.medium
-    
+    @Binding var options: MapState.Options
+        
     var body: some View {
         Form {
             Section(header: Text("Map Appearance")) {
-                Toggle("Show Charts", isOn: $showCharts)
-                
+                Toggle("Show Charts", isOn: $options.map.showCharts)
+                                
                 VStack(alignment: .leading) {
                     Text("Base Map Style")
-                    Picker("Base Map Style", selection: $baseMapType) {
+                    Picker("Base Map Style", selection: $options.map.baseMap) {
                         ForEach([MapType.standard, MapType.satellite, MapType.hybrid], id: \.rawValue) {
                             Text($0.displayString).tag($0)
                         }
@@ -32,7 +30,7 @@ struct MapSettingsMenuView: View {
             Section(header: Text("Charts")) {
                 VStack(alignment: .leading) {
                     Text("Chart Text Size")
-                    Picker("Chart Text Size", selection: $chartTextSize) {
+                    Picker("Chart Text Size", selection: $options.chart.textSize) {
                         ForEach(ChartTextSize.allCases, id: \.rawValue) {
                             Text($0.displayString).tag($0)
                         }
@@ -43,6 +41,17 @@ struct MapSettingsMenuView: View {
                         .lineLimit(20)
                         .font(.caption)
                 }
+                
+                Toggle("Show Areas and Limits", isOn: $options.chart.showChartAreasAndLimits)
+                
+                VStack(alignment: .leading) {
+                    Toggle("Retina Quality Charts", isOn: $options.chart.highQuality)
+                    Text("* Retina files are 4 times larger")
+                        .fixedSize(horizontal: false, vertical: true)
+                        .lineLimit(20)
+                        .font(.caption)
+                }
+
             }
         }
         .navigationTitle("Settings")
@@ -51,7 +60,7 @@ struct MapSettingsMenuView: View {
 
 struct MapSettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        MapSettingsMenuView(baseMapType: .constant(.standard), showCharts: .constant(true))
+        MapSettingsMenuView(options: .constant(.init()))
     }
 }
 

@@ -9,7 +9,7 @@ import SwiftUI
 import MapKit
 
 let bytesInAGb: Float = 1073741824
-private let averageFileSizeBytes: Float = 9436.467
+private let averageFileSizeBytes: Float = 1000
 
 struct DownloadOverlayView: View {
     
@@ -18,6 +18,7 @@ struct DownloadOverlayView: View {
     @Binding var showDownloadMenu: Bool
     @Binding var showNewDownloadOverlayView: Bool
     @Binding var mapChangeEvent: MapRegionChangeEvent
+    let chartOptions: MapState.Options.Chart
     @State var showNameField = false
     @State var name: String = ""
     
@@ -100,10 +101,11 @@ struct DownloadOverlayView: View {
                 CustomTextField(text: $name, isFirstResponder: true)
                     .frame(height: 44)
                 Button(action: {
-                    downloadManager.createAndDownloadNewArea(region: mapChangeEvent.region,
-                                                             name: name == "" ? nil : name)
                     showNewDownloadOverlayView = false
                     showDownloadMenu = true
+                    downloadManager.createAndDownloadNewArea(region: mapChangeEvent.region,
+                                                             name: name == "" ? nil : name,
+                                                             chartOptions: chartOptions)
                 }, label: {
                     Text("Download")
                         .font(.title2)
@@ -136,6 +138,7 @@ func estimatedDownloadTileCount(region: MKCoordinateRegion) -> Int {
         let width = Int(ceil(Float(region.span.longitudeDelta) / degreesPerTile)) + 1
         let height = Int(ceil(Float(region.span.latitudeDelta) / degreesPerTile)) + 1
         count += width * height
+        logger.log("\(width * height) tiles in zoom level \(zoomLevel). ~\(Float(width * height) * averageFileSizeBytes / bytesInMB) mb")
     }
     return count
 }
@@ -159,11 +162,12 @@ struct DownloadOverlayView_Previews: PreviewProvider {
         Group {
             DownloadOverlayView(showDownloadMenu: .constant(false),
                                 showNewDownloadOverlayView: .constant(false),
-                                mapChangeEvent: .constant(mapChangeEvent))
+                                mapChangeEvent: .constant(mapChangeEvent),
+                                chartOptions: .init())
             DownloadOverlayView(showDownloadMenu: .constant(false),
                                 showNewDownloadOverlayView: .constant(false),
                                 mapChangeEvent: .constant(mapChangeEvent),
-                                showNameField: true)
+                                chartOptions: .init(), showNameField: true)
         }
         .background(Color.yellow)
     }
