@@ -124,7 +124,7 @@ struct DownloadOverlayView: View {
             geocoder?.reverseGeocodeLocation(.init(latitude: mapChangeEvent.region.center.latitude,
                                                    longitude: mapChangeEvent.region.center.longitude)) { places, error in
                 if let match = places?.first, name == "" {
-                    name = match.locality ?? match.country ?? match.inlandWater ?? match.ocean ?? ""
+                    name = match.subLocality ?? match.locality ?? match.subAdministrativeArea ?? match.administrativeArea ?? match.inlandWater ?? match.ocean ?? match.country ?? ""
                 }
             }
         }

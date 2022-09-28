@@ -42,7 +42,8 @@ struct MapSettingsMenuView: View {
                         .font(.caption)
                 }
                 
-                Toggle("Show Areas and Limits", isOn: $options.chart.showChartAreasAndLimits)
+                Toggle("Show Chart Areas and Services",
+                       isOn: $options.chart.showChartAreasAndLimits)
                 
                 VStack(alignment: .leading) {
                     Toggle("Retina Quality Charts", isOn: $options.chart.highQuality)

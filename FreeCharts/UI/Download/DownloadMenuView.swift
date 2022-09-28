@@ -44,6 +44,7 @@ struct DownloadMenuView: View {
         }
         .overlay(Group { if isLoading { ProgressView() } })
         .onReceive(manager.downloadedAreas, perform: { areas = $0 })
+        .onReceive(manager.cacheReady) { isLoading = !$0 }
         .navigationTitle("Downloads")
     }
     
@@ -51,7 +52,6 @@ struct DownloadMenuView: View {
         List() {
             ForEach(areas) { area in
                 DownloadAreaListCell(area: area,
-                                     index: areas.firstIndex { $0.id == area.id }!,
                                      chartOptions: chartOptions) {
                     mapChangeEvent = .init(reason: .app, region: area.region)
                     showDownloadMenu = false

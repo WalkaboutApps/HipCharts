@@ -14,6 +14,13 @@ enum DownloadStatus {
     case downloading(progress: Float)
     case failed(DisplayError)
     case complete
+    
+    var isCompleted: Bool {
+        if case .complete = self {
+            return true
+        }
+        return false
+    }
 }
 
 struct DownloadArea: Codable {
@@ -25,9 +32,12 @@ struct DownloadArea: Codable {
     var sizeBytes: Int?
 }
 
+let maxConcurrentRequests = 20
 private func defaultURLSession() -> URLSession {
-    let config = URLSessionConfiguration.default
-    config.httpMaximumConnectionsPerHost = 20
+    let config = URLSessionConfiguration.ephemeral
+    config.urlCache = nil
+//    config.timeoutIntervalForRequest = 10
+    config.httpMaximumConnectionsPerHost = maxConcurrentRequests
     return .init(configuration: config)
 }
 
@@ -43,7 +53,8 @@ class DownloadManager {
     private let defaults: UserDefaults
     private let downloadedTiles = CurrentValueSubject<Set<TilePath>, Never>([])
     private let downloadsByAreaId =
-        CurrentValueSubject<[UUID: CurrentValueSubject<DownloadStatus, Never>], Never>([:])
+        CurrentValueSubject<[UUID: (CurrentValueSubject<DownloadStatus, Never>, AnyCancellable)], Never>([:])
+    private var backgroundTaskId: UIBackgroundTaskIdentifier?
     private var cancellables = CancellableSet()
         
     init(fileManager: FileManager = .default,
@@ -58,7 +69,24 @@ class DownloadManager {
             .sink { [weak self] _ in self?.writeToStore() }
             .store(in: &cancellables)
         
-        DispatchQueue.global(qos: .background).async { [weak self] in
+        // Ask the system for extra time when actively downloading chats
+        downloadsByAreaId
+            .sink { [unowned self] downloadsByAreaId in
+                if downloadsByAreaId.count > 0, backgroundTaskId == nil {
+                    self.backgroundTaskId = UIApplication.shared.beginBackgroundTask(withName: "Chart Downloads") {
+                        if let id = self.backgroundTaskId {
+                            self.backgroundTaskId = nil
+                            UIApplication.shared.endBackgroundTask(id)
+                        }
+                    }
+                } else if downloadsByAreaId.count == 0, let backgroundTaskId = self.backgroundTaskId {
+                    self.backgroundTaskId = nil
+                    UIApplication.shared.endBackgroundTask(backgroundTaskId)
+                }
+            }
+            .store(in: &cancellables)
+        
+        DispatchQueue.global(qos: .default).async { [weak self] in
             self?.initializeInBackgroundQueue()
         }
     }
@@ -71,7 +99,7 @@ class DownloadManager {
                                   name: String?,
                                   chartOptions: MapState.Options.Chart) {
         let area = DownloadArea(id: UUID(), name: name, region: region)
-        downloadedAreas.value.append(area)
+        downloadedAreas.value.insert(area, at: 0)
         download(area: area, chartOptions: chartOptions)
     }
     
@@ -83,33 +111,38 @@ class DownloadManager {
             return
         }
         
+        var completedTiles = Set<TilePath>()
+        let overlay = ChartTileOverlay(options: chartOptions)
+        
         let subject = CurrentValueSubject<DownloadStatus, Never>(.downloading(progress: 0))
-        Just(())
+        let cancellable = Just(())
             .receive(on: DispatchQueue.global(qos: .default))
-            .map { neededTiles(region: area.region) }
-            .receive(on: diskQueue)
-            .flatMap { (neededTiles: Set<TilePath>) -> AnyPublisher<Float, DisplayError> in
-                let overlay = ChartTileOverlay(options: chartOptions)
-                var completedTiles = Set<TilePath>()
-                return Publishers.MergeMany(neededTiles.map { [unowned self] (tilePath) -> AnyPublisher<TilePath, DisplayError> in
-                    let to = downloadFileURL(downloadDir: downloadDir, tilePath: tilePath)
-                    if !refreshCachedFiles && self.fileManager.fileExists(atPath: to.path) {
-                        return Just(tilePath)
-                            .setFailureType(to: DisplayError.self)
-                            .eraseToAnyPublisher()
-                    }
-                    return self.downloadTile(from: overlay.url(forTilePath: tilePath), to: to)
-                        .retry(3)
-                        .map { tilePath }
-                        .eraseToAnyPublisher()
-                })
-                .receive(on: DispatchQueue.main)
-                .map { (tile: TilePath) -> Float in
-                    completedTiles.insert(tile)
-                    return Float(completedTiles.count) / Float(neededTiles.count)
-                }
-                .eraseToAnyPublisher()
+            .flatMap { () -> AnyPublisher<(TilePath, Int), Never> in
+                let tiles = neededTiles(region: area.region)
+                return tiles.publisher
+                    .map { ($0, tiles.count) }
+                    .eraseToAnyPublisher()
             }
+            .setFailureType(to: DisplayError.self)
+            .receive(on: diskQueue)
+            .flatMap(maxPublishers: .max(maxConcurrentRequests)) { (tilePath: TilePath, totalCount: Int) -> AnyPublisher<(TilePath, Int), DisplayError> in
+                let to = downloadFileURL(downloadDir: downloadDir, tilePath: tilePath)
+                if !refreshCachedFiles && self.fileManager.fileExists(atPath: to.path) {
+                    return Just((tilePath, totalCount))
+                        .setFailureType(to: DisplayError.self)
+                        .eraseToAnyPublisher()
+                }
+                return self.downloadTile(from: overlay.url(forTilePath: tilePath), to: to)
+                    .retry(3)
+                    .map { (tilePath, totalCount) }
+                    .eraseToAnyPublisher()
+            }
+            .receive(on: DispatchQueue.main)
+            .map { (tile: TilePath, totalCount: Int) -> Float in
+                completedTiles.insert(tile)
+                return Float(completedTiles.count) / Float(totalCount)
+            }
+            .eraseToAnyPublisher()
             .flatMap { [weak self] (progress: Float) -> AnyPublisher<Float, DisplayError> in
                 // side effect on download completion
                 if progress == 1, let self = self {
@@ -125,16 +158,15 @@ class DownloadManager {
             .map { DownloadStatus.downloading(progress: $0) }
             .catch { Just(.failed($0)) }
             .subscribe(subject)
-            .store(in: &cancellables)
         
-        downloadsByAreaId.value[area.id] = subject
+        downloadsByAreaId.value[area.id] = (subject, cancellable)
     }
     
     func downloadProgressPublisher(area: DownloadArea) -> AnyPublisher<DownloadStatus, Never> {
         downloadsByAreaId
             .flatMap { (downloadsByAreaId) -> AnyPublisher<DownloadStatus, Never> in
                 if let download = downloadsByAreaId[area.id] {
-                    return download.eraseToAnyPublisher()
+                    return download.0.eraseToAnyPublisher()
                 }
                 return Just(
                     area.date == nil ? .failed(DisplayError(displayString: "Download Interupted")) : .complete
@@ -151,8 +183,13 @@ class DownloadManager {
         return try? Data(contentsOf: downloadFileURL(downloadDir: dir, tilePath: path))
     }
     
+    func cancelDownload(area: DownloadArea) {
+        downloadsByAreaId.value.removeValue(forKey: area.id)
+    }
+    
     func deleteDownload(area: DownloadArea) -> AnyPublisher<Void, DisplayError> {
-        downloadedAreas.first()
+        cancelDownload(area: area)
+        return downloadedAreas.first()
             .receive(on: diskQueue)
             .tryMap { downloadedAreas in
                 let r = self.getTileCacheDir()
@@ -160,7 +197,7 @@ class DownloadManager {
                     throw r.error!
                 }
                 
-                var tilesToRemove = neededTiles(region: area.region)
+                var tilesToRemove = Set(neededTiles(region: area.region))
                 downloadedAreas
                     .filter { $0.id != area.id }
                     .forEach {
@@ -267,12 +304,15 @@ class DownloadManager {
                 DisplayError(anyError: $0,
                              defaultDisplayString: "Somthing has gone wrong with this request, please try again.")
             }
-            .tryMap { (data: Data, fileURL: URL) in
+            .tryMap { [weak self] (data: Data, fileURL: URL) in
                 try data.write(to: fileURL)
                 var fileURL = fileURL
                 var values = URLResourceValues()
                 values.isExcludedFromBackup = true
                 try fileURL.setResourceValues(values)
+                guard self?.fileManager.fileExists(atPath: fileURL.path) == true else {
+                    throw DisplayError(displayString: "Failed to save tile: \(fileURL.lastPathComponent)")
+                }
             }
             .mapError {
                 DisplayError(anyError: $0,
@@ -386,8 +426,8 @@ private func tilePath(downloadFileURL: URL) -> TilePath? {
 
 
 func neededTiles(region: MKCoordinateRegion,
-                 zRange: ClosedRange<Int> = ChartTileOverlay.minimumZ ... ChartTileOverlay.maximumZ) -> Set<TilePath> {
-    Set(zRange.flatMap { (z) -> [MKTileOverlayPath] in
+                 zRange: ClosedRange<Int> = ChartTileOverlay.minimumZ ... ChartTileOverlay.maximumZ) -> [TilePath] {
+    zRange.flatMap { (z) -> [MKTileOverlayPath] in
         let topLeft = tilePath(region.northWest, zoom: z)
         let bottomRight = tilePath(region.southEast, zoom: z)
         return (topLeft.x ... bottomRight.x).flatMap { x in
@@ -395,7 +435,7 @@ func neededTiles(region: MKCoordinateRegion,
                 MKTileOverlayPath(x: x, y: $0, z: z)
             }
         }
-    })
+    }
 }
 
 private func tilePath(_ coordinate: CLLocationCoordinate2D, zoom: Int) -> TilePath {

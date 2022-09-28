@@ -17,7 +17,6 @@ private let dateFormatter: DateFormatter = {
 struct DownloadAreaListCell: View {
     
     let area: DownloadArea
-    let index: Int
     let chartOptions: MapState.Options.Chart
     let onShowOnMap: () -> Void
     
@@ -30,9 +29,9 @@ struct DownloadAreaListCell: View {
         VStack {
             HStack(spacing: 0) {
                 Group {
-                    Text(area.name ?? "Area \(index)")
+                    Text(area.name ?? "Chart Area")
                     statusView
-
+                    
                     Spacer()
                 }
                 .background(Color.systemBackground)
@@ -46,22 +45,34 @@ struct DownloadAreaListCell: View {
                             .padding(.top, 8)
                     }
                     
-                        Text("Updated \(dateFormatter.string(from: .init()))")
+                    if let date = area.date {
+                        Text("Updated \(dateFormatter.string(from: date))")
                             .foregroundColor(.secondary)
                             .padding(.top, 8)
-
+                    }
                     
-                        
+                    if case .downloading = downloadStatus {
                         Button {
-                            manager.download(area: area, chartOptions: chartOptions)
+                            manager.cancelDownload(area: area)
+                        } label: {
+                            Text("Cancel")
+                                .foregroundColor(.accentColor)
+                                .padding(.vertical, 8)
+                        }
+                        .buttonStyle(.plain)
+                    } else {
+                        Button {
+                            manager.download(area: area,
+                                             chartOptions: chartOptions,
+                                             refreshCachedFiles: downloadStatus?.isCompleted == true)
                         } label: {
                             Text("Update")
                                 .foregroundColor(.accentColor)
                                 .padding(.vertical, 8)
                         }
                         .buttonStyle(.plain)
+                    }
                 }
-                
             }
             if case .downloading(let progress) = downloadStatus {
                 ProgressView(value: progress, total: 1)
@@ -100,14 +111,14 @@ struct DownloadAreaListCell: View {
 
 struct DownloadAreaListCell_Previews: PreviewProvider {
     static let region = MKCoordinateRegion(center: .init(latitude: 1, longitude: 1),
-                                  span: .init(latitudeDelta: 0.01, longitudeDelta: 0.01))
-
+                                           span: .init(latitudeDelta: 0.01, longitudeDelta: 0.01))
+    
     static let area = DownloadArea(id: .init(), name: "Fish That I saw once last winter, but is now gone", region: region, sizeBytes: 13000000)
     static let area2 = DownloadArea(id: .init(), name: nil, region: region, sizeBytes: 1300000)
     static var previews: some View {
         List {
-            DownloadAreaListCell(area: area, index: 44, chartOptions: .init(), onShowOnMap: { })
-            DownloadAreaListCell(area: area2, index: 45, chartOptions: .init(), onShowOnMap: { })
+            DownloadAreaListCell(area: area, chartOptions: .init(), onShowOnMap: { })
+            DownloadAreaListCell(area: area2, chartOptions: .init(), onShowOnMap: { })
         }
     }
 }

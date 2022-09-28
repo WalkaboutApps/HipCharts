@@ -34,14 +34,14 @@ class ChartTileOverlay: MKTileOverlay {
     
     override func url(forTilePath path: MKTileOverlayPath) -> URL {
         let dpi = options.highQuality ? options.textSize.rawValue : options.textSize.rawValue / 2
-        /// diabling this disables transparency. Reverse engineer layers.
-        let warningLayersParam = options.showChartAreasAndLimits ? "&layers=show%3A2%2C3%2C4%2C5%2C6%2C7" : ""
+        var warningLayersParam = options.showChartAreasAndLimits ? "&layers=show:2,3,4,5,6,7" : "&layers=show:2,6"
+        warningLayersParam = warningLayersParam.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         let tileWidth = Int(options.highQuality ? tileSize.width : tileSize.width / 2)
 
         let (minY, maxX) = convertToWebMercator(coordinate: topLeftCoordinateOfXYZTile(x: path.x, y: path.y, z: path.z))
         let (maxY, minX) = convertToWebMercator(coordinate: topLeftCoordinateOfXYZTile(x: path.x + 1, y: path.y + 1, z: path.z))
         
-        let urlString = "https://gis.charttools.noaa.gov/arcgis/rest/services/MCS/NOAAChartDisplay/MapServer/exts/MaritimeChartService/MapServer/export?transparent=true\(warningLayersParam)&size=\(tileWidth)%2C\(tileWidth)&bbox=\(minY)%2C\(minX)%2C\(maxY)%2C\(maxX)&bboxsr=3857&imagesr=3857&dpi=\(dpi)&transparent=true"
+        let urlString = "https://gis.charttools.noaa.gov/arcgis/rest/services/MCS/NOAAChartDisplay/MapServer/exts/MaritimeChartService/MapServer/export?transparent=true\(warningLayersParam)&size=\(tileWidth)%2C\(tileWidth)&bbox=\(minY)%2C\(minX)%2C\(maxY)%2C\(maxX)&bboxsr=3857&imagesr=3857&dpi=\(dpi)"
         return URL(string: urlString)!
     }
     
@@ -99,3 +99,112 @@ class ChartTileOverlay: MKTileOverlay {
 
 // simple working URL https://gis.charttools.noaa.gov/arcgis/rest/services/MCS/NOAAChartDisplay/MapServer/exts/MaritimeChartService/MapServer/export?size=256%2C256&bbox=-7958818.216247354%2C5190773.590516125%2C-7806649.333229041%2C5240599.426775553
 // bbox = miny,minx,maxy,maxx
+
+/*
+ 
+ layers: (13)
+ id: 0
+ name: Information about the chart display
+ defaultVisibility: true
+ parentLayerId: -1
+ subLayerIds: N/A
+ minScale: 0
+ maxScale: 0
+
+ id: 1
+ name: Natural and man-made features, port features
+ defaultVisibility: true
+ parentLayerId: -1
+ subLayerIds: N/A
+ minScale: 0
+ maxScale: 0
+
+ id: 2
+ name: Depths, currents, etc
+ defaultVisibility: true
+ parentLayerId: -1
+ subLayerIds: N/A
+ minScale: 0
+ maxScale: 0
+
+ id: 3
+ name: Seabed, obstructions, pipelines
+ defaultVisibility: true
+ parentLayerId: -1
+ subLayerIds: N/A
+ minScale: 0
+ maxScale: 0
+
+ id: 4
+ name: Traffic routes
+ defaultVisibility: true
+ parentLayerId: -1
+ subLayerIds: N/A
+ minScale: 0
+ maxScale: 0
+
+ id: 5
+ name: Special areas
+ defaultVisibility: true
+ parentLayerId: -1
+ subLayerIds: N/A
+ minScale: 0
+ maxScale: 0
+
+ id: 6
+ name: Buoys, beacons, lights, fog signals, radar
+ defaultVisibility: true
+ parentLayerId: -1
+ subLayerIds: N/A
+ minScale: 0
+ maxScale: 0
+
+ id: 7
+ name: Services and small craft facilities
+ defaultVisibility: true
+ parentLayerId: -1
+ subLayerIds: N/A
+ minScale: 0
+ maxScale: 0
+
+ id: 8
+ name: Data quality
+ defaultVisibility: false
+ parentLayerId: -1
+ subLayerIds: N/A
+ minScale: 0
+ maxScale: 0
+
+ id: 9
+ name: Low accuracy
+ defaultVisibility: false
+ parentLayerId: -1
+ subLayerIds: N/A
+ minScale: 0
+ maxScale: 0
+
+ id: 10
+ name: Additional chart information
+ defaultVisibility: false
+ parentLayerId: -1
+ subLayerIds: N/A
+ minScale: 0
+ maxScale: 0
+
+ id: 11
+ name: Shallow water pattern
+ defaultVisibility: false
+ parentLayerId: -1
+ subLayerIds: N/A
+ minScale: 0
+ maxScale: 0
+
+ id: 12
+ name: Overscale warning
+ defaultVisibility: false
+ parentLayerId: -1
+ subLayerIds: N/A
+ minScale: 0
+ maxScale: 0
+
+ */
