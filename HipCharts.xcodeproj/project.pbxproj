@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		CF143C0828D51DA100904E7E /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF143C0728D51DA100904E7E /* Main.swift */; };
 		CF143C0A28D51DA100904E7E /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF143C0928D51DA100904E7E /* RootView.swift */; };
-		CF143C0C28D51DA600904E7E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CF143C0B28D51DA600904E7E /* Assets.xcassets */; };
+		CF143C0C28D51DA600904E7E /* Main.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CF143C0B28D51DA600904E7E /* Main.xcassets */; };
 		CF143C0F28D51DA700904E7E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CF143C0E28D51DA700904E7E /* Preview Assets.xcassets */; };
 		CF143C1928D51DA700904E7E /* FreeChartsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF143C1828D51DA700904E7E /* FreeChartsTests.swift */; };
 		CF143C2328D51DA700904E7E /* FreeChartsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF143C2228D51DA700904E7E /* FreeChartsUITests.swift */; };
@@ -59,14 +59,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		CF143C0428D51DA100904E7E /* FreeCharts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FreeCharts.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CF143C0428D51DA100904E7E /* HipCharts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HipCharts.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF143C0728D51DA100904E7E /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
 		CF143C0928D51DA100904E7E /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
-		CF143C0B28D51DA600904E7E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		CF143C0B28D51DA600904E7E /* Main.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Main.xcassets; sourceTree = "<group>"; };
 		CF143C0E28D51DA700904E7E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		CF143C1428D51DA700904E7E /* FreeChartsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FreeChartsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CF143C1428D51DA700904E7E /* HipChartsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HipChartsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF143C1828D51DA700904E7E /* FreeChartsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeChartsTests.swift; sourceTree = "<group>"; };
-		CF143C1E28D51DA700904E7E /* FreeChartsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FreeChartsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CF143C1E28D51DA700904E7E /* HipChartsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HipChartsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF143C2228D51DA700904E7E /* FreeChartsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeChartsUITests.swift; sourceTree = "<group>"; };
 		CF143C2428D51DA700904E7E /* FreeChartsUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeChartsUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		CF143C3228D51E7D00904E7E /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
@@ -94,6 +94,7 @@
 		CF859ED328E37AD7005C9FD4 /* Codable+RawRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Codable+RawRepresentable.swift"; sourceTree = "<group>"; };
 		CF859ED728E37E9B005C9FD4 /* MapRegionChangeEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapRegionChangeEvent.swift; sourceTree = "<group>"; };
 		CF859ED928E382F4005C9FD4 /* MapState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapState.swift; sourceTree = "<group>"; };
+		CF859EDE28E50AE8005C9FD4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,9 +133,9 @@
 		CF143BFB28D51DA100904E7E = {
 			isa = PBXGroup;
 			children = (
-				CF143C0628D51DA100904E7E /* FreeCharts */,
-				CF143C1728D51DA700904E7E /* FreeChartsTests */,
-				CF143C2128D51DA700904E7E /* FreeChartsUITests */,
+				CF143C0628D51DA100904E7E /* HipCharts */,
+				CF143C1728D51DA700904E7E /* HipChartsTests */,
+				CF143C2128D51DA700904E7E /* HipChartsUITests */,
 				CF143C0528D51DA100904E7E /* Products */,
 				CF143C3428D5451F00904E7E /* Frameworks */,
 			);
@@ -143,24 +144,25 @@
 		CF143C0528D51DA100904E7E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CF143C0428D51DA100904E7E /* FreeCharts.app */,
-				CF143C1428D51DA700904E7E /* FreeChartsTests.xctest */,
-				CF143C1E28D51DA700904E7E /* FreeChartsUITests.xctest */,
+				CF143C0428D51DA100904E7E /* HipCharts.app */,
+				CF143C1428D51DA700904E7E /* HipChartsTests.xctest */,
+				CF143C1E28D51DA700904E7E /* HipChartsUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		CF143C0628D51DA100904E7E /* FreeCharts */ = {
+		CF143C0628D51DA100904E7E /* HipCharts */ = {
 			isa = PBXGroup;
 			children = (
-				CF143C0B28D51DA600904E7E /* Assets.xcassets */,
+				CF859EDE28E50AE8005C9FD4 /* Info.plist */,
+				CF143C0B28D51DA600904E7E /* Main.xcassets */,
 				CF65A11D28D631F6004B241B /* App */,
 				CF65A12028D6560F004B241B /* Extensions */,
 				CF65A12328D65908004B241B /* Managers */,
 				CF143C0D28D51DA700904E7E /* Preview Content */,
 				CF143C3128D51E0900904E7E /* UI */,
 			);
-			path = FreeCharts;
+			path = HipCharts;
 			sourceTree = "<group>";
 		};
 		CF143C0D28D51DA700904E7E /* Preview Content */ = {
@@ -171,21 +173,21 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		CF143C1728D51DA700904E7E /* FreeChartsTests */ = {
+		CF143C1728D51DA700904E7E /* HipChartsTests */ = {
 			isa = PBXGroup;
 			children = (
 				CF143C1828D51DA700904E7E /* FreeChartsTests.swift */,
 			);
-			path = FreeChartsTests;
+			path = HipChartsTests;
 			sourceTree = "<group>";
 		};
-		CF143C2128D51DA700904E7E /* FreeChartsUITests */ = {
+		CF143C2128D51DA700904E7E /* HipChartsUITests */ = {
 			isa = PBXGroup;
 			children = (
 				CF143C2228D51DA700904E7E /* FreeChartsUITests.swift */,
 				CF143C2428D51DA700904E7E /* FreeChartsUITestsLaunchTests.swift */,
 			);
-			path = FreeChartsUITests;
+			path = HipChartsUITests;
 			sourceTree = "<group>";
 		};
 		CF143C3128D51E0900904E7E /* UI */ = {
@@ -294,9 +296,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		CF143C0328D51DA100904E7E /* FreeCharts */ = {
+		CF143C0328D51DA100904E7E /* HipCharts */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CF143C2828D51DA700904E7E /* Build configuration list for PBXNativeTarget "FreeCharts" */;
+			buildConfigurationList = CF143C2828D51DA700904E7E /* Build configuration list for PBXNativeTarget "HipCharts" */;
 			buildPhases = (
 				CF143C0028D51DA100904E7E /* Sources */,
 				CF143C0128D51DA100904E7E /* Frameworks */,
@@ -306,14 +308,14 @@
 			);
 			dependencies = (
 			);
-			name = FreeCharts;
+			name = HipCharts;
 			productName = FreeCharts;
-			productReference = CF143C0428D51DA100904E7E /* FreeCharts.app */;
+			productReference = CF143C0428D51DA100904E7E /* HipCharts.app */;
 			productType = "com.apple.product-type.application";
 		};
-		CF143C1328D51DA700904E7E /* FreeChartsTests */ = {
+		CF143C1328D51DA700904E7E /* HipChartsTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CF143C2B28D51DA700904E7E /* Build configuration list for PBXNativeTarget "FreeChartsTests" */;
+			buildConfigurationList = CF143C2B28D51DA700904E7E /* Build configuration list for PBXNativeTarget "HipChartsTests" */;
 			buildPhases = (
 				CF143C1028D51DA700904E7E /* Sources */,
 				CF143C1128D51DA700904E7E /* Frameworks */,
@@ -324,14 +326,14 @@
 			dependencies = (
 				CF143C1628D51DA700904E7E /* PBXTargetDependency */,
 			);
-			name = FreeChartsTests;
+			name = HipChartsTests;
 			productName = FreeChartsTests;
-			productReference = CF143C1428D51DA700904E7E /* FreeChartsTests.xctest */;
+			productReference = CF143C1428D51DA700904E7E /* HipChartsTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		CF143C1D28D51DA700904E7E /* FreeChartsUITests */ = {
+		CF143C1D28D51DA700904E7E /* HipChartsUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CF143C2E28D51DA700904E7E /* Build configuration list for PBXNativeTarget "FreeChartsUITests" */;
+			buildConfigurationList = CF143C2E28D51DA700904E7E /* Build configuration list for PBXNativeTarget "HipChartsUITests" */;
 			buildPhases = (
 				CF143C1A28D51DA700904E7E /* Sources */,
 				CF143C1B28D51DA700904E7E /* Frameworks */,
@@ -342,9 +344,9 @@
 			dependencies = (
 				CF143C2028D51DA700904E7E /* PBXTargetDependency */,
 			);
-			name = FreeChartsUITests;
+			name = HipChartsUITests;
 			productName = FreeChartsUITests;
-			productReference = CF143C1E28D51DA700904E7E /* FreeChartsUITests.xctest */;
+			productReference = CF143C1E28D51DA700904E7E /* HipChartsUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -370,7 +372,7 @@
 					};
 				};
 			};
-			buildConfigurationList = CF143BFF28D51DA100904E7E /* Build configuration list for PBXProject "FreeCharts" */;
+			buildConfigurationList = CF143BFF28D51DA100904E7E /* Build configuration list for PBXProject "HipCharts" */;
 			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -383,9 +385,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				CF143C0328D51DA100904E7E /* FreeCharts */,
-				CF143C1328D51DA700904E7E /* FreeChartsTests */,
-				CF143C1D28D51DA700904E7E /* FreeChartsUITests */,
+				CF143C0328D51DA100904E7E /* HipCharts */,
+				CF143C1328D51DA700904E7E /* HipChartsTests */,
+				CF143C1D28D51DA700904E7E /* HipChartsUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -396,7 +398,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF143C0F28D51DA700904E7E /* Preview Assets.xcassets in Resources */,
-				CF143C0C28D51DA600904E7E /* Assets.xcassets in Resources */,
+				CF143C0C28D51DA600904E7E /* Main.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -472,12 +474,12 @@
 /* Begin PBXTargetDependency section */
 		CF143C1628D51DA700904E7E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = CF143C0328D51DA100904E7E /* FreeCharts */;
+			target = CF143C0328D51DA100904E7E /* HipCharts */;
 			targetProxy = CF143C1528D51DA700904E7E /* PBXContainerItemProxy */;
 		};
 		CF143C2028D51DA700904E7E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = CF143C0328D51DA100904E7E /* FreeCharts */;
+			target = CF143C0328D51DA100904E7E /* HipCharts */;
 			targetProxy = CF143C1F28D51DA700904E7E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -604,14 +606,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"FreeCharts/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"HipCharts/Preview Content\"";
 				DEVELOPMENT_TEAM = 26629D7QMJ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HipCharts/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "To show your location on the map";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -620,7 +622,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = walkaboutapps.FreeCharts;
+				PRODUCT_BUNDLE_IDENTIFIER = walkaboutapps.HipCharts;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -635,14 +637,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"FreeCharts/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"HipCharts/Preview Content\"";
 				DEVELOPMENT_TEAM = 26629D7QMJ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HipCharts/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "To show your location on the map";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -651,7 +653,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = walkaboutapps.FreeCharts;
+				PRODUCT_BUNDLE_IDENTIFIER = walkaboutapps.HipCharts;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -738,7 +740,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		CF143BFF28D51DA100904E7E /* Build configuration list for PBXProject "FreeCharts" */ = {
+		CF143BFF28D51DA100904E7E /* Build configuration list for PBXProject "HipCharts" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CF143C2628D51DA700904E7E /* Debug */,
@@ -747,7 +749,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CF143C2828D51DA700904E7E /* Build configuration list for PBXNativeTarget "FreeCharts" */ = {
+		CF143C2828D51DA700904E7E /* Build configuration list for PBXNativeTarget "HipCharts" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CF143C2928D51DA700904E7E /* Debug */,
@@ -756,7 +758,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CF143C2B28D51DA700904E7E /* Build configuration list for PBXNativeTarget "FreeChartsTests" */ = {
+		CF143C2B28D51DA700904E7E /* Build configuration list for PBXNativeTarget "HipChartsTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CF143C2C28D51DA700904E7E /* Debug */,
@@ -765,7 +767,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CF143C2E28D51DA700904E7E /* Build configuration list for PBXNativeTarget "FreeChartsUITests" */ = {
+		CF143C2E28D51DA700904E7E /* Build configuration list for PBXNativeTarget "HipChartsUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CF143C2F28D51DA700904E7E /* Debug */,

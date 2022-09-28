@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "CF143C0328D51DA100904E7E"
-               BuildableName = "FreeCharts.app"
-               BlueprintName = "FreeCharts"
+               BuildableName = "HipCharts.app"
+               BlueprintName = "HipCharts"
                ReferencedContainer = "container:FreeCharts.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "CF143C1328D51DA700904E7E"
-               BuildableName = "FreeChartsTests.xctest"
-               BlueprintName = "FreeChartsTests"
-               ReferencedContainer = "container:FreeCharts.xcodeproj">
+               BuildableName = "HipChartsTests.xctest"
+               BlueprintName = "HipChartsTests"
+               ReferencedContainer = "container:HipCharts.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -43,9 +43,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "CF143C1D28D51DA700904E7E"
-               BuildableName = "FreeChartsUITests.xctest"
-               BlueprintName = "FreeChartsUITests"
-               ReferencedContainer = "container:FreeCharts.xcodeproj">
+               BuildableName = "HipChartsUITests.xctest"
+               BlueprintName = "HipChartsUITests"
+               ReferencedContainer = "container:HipCharts.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -66,11 +66,20 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "CF143C0328D51DA100904E7E"
-            BuildableName = "FreeCharts.app"
-            BlueprintName = "FreeCharts"
-            ReferencedContainer = "container:FreeCharts.xcodeproj">
+            BuildableName = "HipCharts.app"
+            BlueprintName = "HipCharts"
+            ReferencedContainer = "container:HipCharts.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "CF143C0328D51DA100904E7E"
+            BuildableName = "HipCharts.app"
+            BlueprintName = "HipCharts"
+            ReferencedContainer = "container:FreeCharts.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "OS_ACTIVITY_MODE"
@@ -90,8 +99,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "CF143C0328D51DA100904E7E"
-            BuildableName = "FreeCharts.app"
-            BlueprintName = "FreeCharts"
+            BuildableName = "HipCharts.app"
+            BlueprintName = "HipCharts"
             ReferencedContainer = "container:FreeCharts.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
