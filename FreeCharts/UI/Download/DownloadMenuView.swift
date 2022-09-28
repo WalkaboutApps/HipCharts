@@ -105,8 +105,8 @@ struct DownloadMenuView_Previews: PreviewProvider {
                                                                    span: .init(latitudeDelta: 0.01,
                                                                                longitudeDelta: 0.01)))
 
-    static let area = DownloadArea(id: .init(), name: "Fish", region: mapChangeEvent.region, status: .complete, sizeBytes: 13000000)
-    static let area2 = DownloadArea(id: .init(), name: nil, region: mapChangeEvent.region, status: .complete, sizeBytes: 1300000)
+    static let area = DownloadArea(id: .init(), name: "Fish", region: mapChangeEvent.region, sizeBytes: 13000000)
+    static let area2 = DownloadArea(id: .init(), name: nil, region: mapChangeEvent.region, sizeBytes: 1300000)
 
     static var previews: some View {
         Group {

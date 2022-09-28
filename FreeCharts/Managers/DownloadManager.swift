@@ -10,16 +10,18 @@ import Foundation
 import MapKit
 import CoreLocation
 
+enum DownloadStatus {
+    case downloading(progress: Float)
+    case failed(DisplayError)
+    case complete
+}
+
 struct DownloadArea: Codable {
-    enum Status: Codable {
-        case downloading, complete
-        case failed(errorString: String)
-    }
     let id: UUID
     var name: String?
     let region: MKCoordinateRegion
-    var date = Date()
-    var status: Status
+    /// Date of last completed download
+    var date: Date?
     var sizeBytes: Int?
 }
 
@@ -30,6 +32,7 @@ private func defaultURLSession() -> URLSession {
 }
 
 private let downloadAreasDefaultsKey = "DownloadAreasData"
+private let diskQueue = DispatchQueue(label: "Disk Queue", qos: .utility)
 
 class DownloadManager {
     let downloadedAreas = CurrentValueSubject<[DownloadArea], Never>([])
@@ -39,7 +42,8 @@ class DownloadManager {
     private let urlSession: URLSession
     private let defaults: UserDefaults
     private let downloadedTiles = CurrentValueSubject<Set<TilePath>, Never>([])
-    private let diskQueue = DispatchQueue(label: "Disk Queue", qos: .utility)
+    private let downloadsByAreaId =
+        CurrentValueSubject<[UUID: CurrentValueSubject<DownloadStatus, Never>], Never>([:])
     private var cancellables = CancellableSet()
         
     init(fileManager: FileManager = .default,
@@ -63,29 +67,30 @@ class DownloadManager {
         defaults.setCodable(downloadedAreas.value, forKey: downloadAreasDefaultsKey)
     }
     
-    @discardableResult
     func createAndDownloadNewArea(region: MKCoordinateRegion,
                                   name: String?,
-                                  chartOptions: MapState.Options.Chart) -> Result<DownloadArea, DisplayError> {
-        let area = DownloadArea(id: UUID(), name: name, region: region, status: .downloading)
+                                  chartOptions: MapState.Options.Chart) {
+        let area = DownloadArea(id: UUID(), name: name, region: region)
         downloadedAreas.value.append(area)
-        return download(area: area, chartOptions: chartOptions).map { area }
+        download(area: area, chartOptions: chartOptions)
     }
     
-    @discardableResult
     func download(area: DownloadArea,
                   chartOptions: MapState.Options.Chart,
-                  refreshCachedFiles: Bool = true) -> Result<Void, DisplayError> {
+                  refreshCachedFiles: Bool = true) {
         let r = getTileCacheDir()
         guard case .success(let downloadDir) = r else {
-            return .failure(r.error!)
+            return
         }
         
+        let subject = CurrentValueSubject<DownloadStatus, Never>(.downloading(progress: 0))
         Just(())
-            .subscribe(on: diskQueue)
-            .flatMap {
-                let neededTiles = neededTiles(region: area.region)
+            .receive(on: DispatchQueue.global(qos: .default))
+            .map { neededTiles(region: area.region) }
+            .receive(on: diskQueue)
+            .flatMap { (neededTiles: Set<TilePath>) -> AnyPublisher<Float, DisplayError> in
                 let overlay = ChartTileOverlay(options: chartOptions)
+                var completedTiles = Set<TilePath>()
                 return Publishers.MergeMany(neededTiles.map { [unowned self] (tilePath) -> AnyPublisher<TilePath, DisplayError> in
                     let to = downloadFileURL(downloadDir: downloadDir, tilePath: tilePath)
                     if !refreshCachedFiles && self.fileManager.fileExists(atPath: to.path) {
@@ -98,36 +103,44 @@ class DownloadManager {
                         .map { tilePath }
                         .eraseToAnyPublisher()
                 })
-            }
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case .failure(let error) = completion {
-                    // todo Display global error
-                    logger.log("Download Area failed: \(error)")
-                    self?.updateDownloadAreaStatuses(event: .failed((area.id, error)))
-                } else {
-                    self?.updateDownloadAreaStatuses(event: .complete(area.id))
-                }
-            }, receiveValue: {
-                [weak self] in self?.downloadedTiles.value.insert($0)
-            })
-            .store(in: &cancellables)
-        
-                
-        return .success(())
-    }
-    
-    func downloadProgressPublisher(area: DownloadArea) -> AnyPublisher<Float?, Never> {
-        if case .downloading = area.status {
-            let needed = neededTiles(region: area.region)
-            return downloadedTiles
-                .map { downloadedTiles in
-                    let downloaded = needed.filter { downloadedTiles.contains($0) }
-                    return Float(downloaded.count) / Float(needed.count)
+                .receive(on: DispatchQueue.main)
+                .map { (tile: TilePath) -> Float in
+                    completedTiles.insert(tile)
+                    return Float(completedTiles.count) / Float(neededTiles.count)
                 }
                 .eraseToAnyPublisher()
-        }
-        return Just(nil).eraseToAnyPublisher()
+            }
+            .flatMap { [weak self] (progress: Float) -> AnyPublisher<Float, DisplayError> in
+                // side effect on download completion
+                if progress == 1, let self = self {
+                    return self.completeDownload(area: area)
+                        .map { progress }
+                        .setFailureType(to: DisplayError.self)
+                        .eraseToAnyPublisher()
+                }
+                return Just(progress)
+                    .setFailureType(to: DisplayError.self)
+                    .eraseToAnyPublisher()
+            }
+            .map { DownloadStatus.downloading(progress: $0) }
+            .catch { Just(.failed($0)) }
+            .subscribe(subject)
+            .store(in: &cancellables)
+        
+        downloadsByAreaId.value[area.id] = subject
+    }
+    
+    func downloadProgressPublisher(area: DownloadArea) -> AnyPublisher<DownloadStatus, Never> {
+        downloadsByAreaId
+            .flatMap { (downloadsByAreaId) -> AnyPublisher<DownloadStatus, Never> in
+                if let download = downloadsByAreaId[area.id] {
+                    return download.eraseToAnyPublisher()
+                }
+                return Just(
+                    area.date == nil ? .failed(DisplayError(displayString: "Download Interupted")) : .complete
+                ).eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
     }
     
     func getTile(path: TilePath) -> Data? {
@@ -198,78 +211,47 @@ class DownloadManager {
         }
         
         // load areas
-        var areas = [DownloadArea]()
-        if let loadedAreas: [DownloadArea] = defaults.codable(forKey: downloadAreasDefaultsKey) {
-            // Verify that area status matches files
-            areas = loadedAreas.map { area in
-                let neededTiles = neededTiles(region: area.region)
-                
-                let count = neededTiles.count
-                let total = calculateAreaFileSizeBytes(area: area)
-                let average = Float(total) / Float(count)
-                logger.log("Average files size in bytes: \(average)")
-                
-                switch area.status {
-                case .downloading:
-                    var updated = area
-                    updated.status = neededTiles.allSatisfy(tilePaths.contains) ?
-                        .complete : .failed(errorString: "Download interupted")
-                    if updated.sizeBytes == nil {
-                        updated.sizeBytes = calculateAreaFileSizeBytes(area: area)
-                    }
-                    return updated
-                case .complete:
-                    var updated = area
-                    updated.status = neededTiles.allSatisfy(tilePaths.contains) ?
-                        .complete : .failed(errorString: "Files missing")
-                    return updated
-                case .failed(errorString: let errorString):
-                    var updated = area
-                    updated.status = neededTiles.allSatisfy(tilePaths.contains) ?
-                        .complete : .failed(errorString: errorString)
-                    if updated.sizeBytes == nil {
-                        updated.sizeBytes = calculateAreaFileSizeBytes(area: area)
-                    }
-                    return updated
-                }
-            }
-        }
+        let areas: [DownloadArea] = defaults.codable(forKey: downloadAreasDefaultsKey) ?? []
+//            areas = loadedAreas
+//                .map { area in
+//                let neededTiles = neededTiles(region: area.region)
+//                let count = neededTiles.count
+//                let total = calculateAreaFileSizeBytes(area: area)
+//                let average = Float(total) / Float(count)
+//                logger.log("Average files size in bytes: \(average)")
+//            }
+        
         
         DispatchQueue.main.async {
             self.downloadedTiles.send(tilePaths)
             self.downloadedAreas.value = areas
             self.cacheReady.send(true)
-            self.purgeStrayCacheFiles()
+            // TODO re-enable in a way that does not block disk queue at startup
+//            self.purgeStrayCacheFiles()
         }
     }
     
     
     // MARK: - Download
     
-    private func updateDownloadAreaStatuses(event: UpdateEvent) {
-        downloadedAreas.value = downloadedAreas.value.map { area in
-            switch (area.status) {
-            case .downloading:
-                switch event {
-                case .failed(let (id, error)) where id == area.id:
-                    var updated = area
-                    updated.status = .failed(errorString: "\(error)")
-                    return updated
-                case .complete(let id) where id == area.id:
-                    var updated = area
-                    updated.status = .complete
-                    updated.sizeBytes = calculateAreaFileSizeBytes(area: area)
-                    updated.date = Date()
-                    return updated
-                default:
-                    return area
-                }
-                
-            // failed and complete areas currently do not have mutations (until delete.... and update....)
-            case .failed, .complete:
-                return area
+    private func completeDownload(area completedArea: DownloadArea) -> AnyPublisher<Void, Never> {
+        Just(completedArea)
+            .receive(on: diskQueue)
+            .map { completedArea in
+                var updated = completedArea
+                updated.sizeBytes = self.calculateAreaFileSizeBytes(area: completedArea)
+                updated.date = Date()
+                return updated
             }
-        }
+            .receive(on: DispatchQueue.main)
+            .map { [weak self] completedArea in
+                guard let self = self else { return }
+                self.downloadedAreas.value = self.downloadedAreas.value.map {
+                    $0.id == completedArea.id ? completedArea : $0
+                }
+                self.downloadsByAreaId.value.removeValue(forKey: completedArea.id)
+            }
+            .eraseToAnyPublisher()
     }
     
     private func downloadTile(from: URL, to: URL) -> AnyPublisher<Void, DisplayError> {

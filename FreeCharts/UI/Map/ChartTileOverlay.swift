@@ -34,6 +34,7 @@ class ChartTileOverlay: MKTileOverlay {
     
     override func url(forTilePath path: MKTileOverlayPath) -> URL {
         let dpi = options.highQuality ? options.textSize.rawValue : options.textSize.rawValue / 2
+        /// diabling this disables transparency. Reverse engineer layers.
         let warningLayersParam = options.showChartAreasAndLimits ? "&layers=show%3A2%2C3%2C4%2C5%2C6%2C7" : ""
         let tileWidth = Int(options.highQuality ? tileSize.width : tileSize.width / 2)
 

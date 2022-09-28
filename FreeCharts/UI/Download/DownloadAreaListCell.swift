@@ -21,7 +21,7 @@ struct DownloadAreaListCell: View {
     let chartOptions: MapState.Options.Chart
     let onShowOnMap: () -> Void
     
-    @State var downloadProgress: Float?
+    @State var downloadStatus: DownloadStatus?
     @State var errorText: String?
     
     var manager = app.dependencies.downloadManager
@@ -31,7 +31,7 @@ struct DownloadAreaListCell: View {
             HStack(spacing: 0) {
                 Group {
                     Text(area.name ?? "Area \(index)")
-                    statusView(area.status)
+                    statusView
 
                     Spacer()
                 }
@@ -54,7 +54,6 @@ struct DownloadAreaListCell: View {
                         
                         Button {
                             manager.download(area: area, chartOptions: chartOptions)
-                            downloadProgress = 0
                         } label: {
                             Text("Update")
                                 .foregroundColor(.accentColor)
@@ -64,18 +63,18 @@ struct DownloadAreaListCell: View {
                 }
                 
             }
-            if let progress = downloadProgress {
+            if case .downloading(let progress) = downloadStatus {
                 ProgressView(value: progress, total: 1)
                     .progressViewStyle(.linear)
             }
         }
         .toast(message: $errorText)
-        .onReceive(manager.downloadProgressPublisher(area: area)) { downloadProgress = $0 }
+        .onReceive(manager.downloadProgressPublisher(area: area)) { downloadStatus = $0 }
     }
     
-    func statusView(_ status: DownloadArea.Status) -> some View {
-        switch status {
-        case .downloading:
+    var statusView: some View {
+        switch downloadStatus {
+        case .downloading, .none:
             return AnyView(EmptyView())
         case .complete:
             return AnyView(
@@ -86,7 +85,7 @@ struct DownloadAreaListCell: View {
         case .failed(errorString: let errorString):
             return AnyView(
                 Button(action: {
-                    errorText = errorString
+                    errorText = errorString.displayString
                 }, label: {
                     Image(systemName: "exclamationmark.triangle")
                         .padding()
@@ -103,8 +102,8 @@ struct DownloadAreaListCell_Previews: PreviewProvider {
     static let region = MKCoordinateRegion(center: .init(latitude: 1, longitude: 1),
                                   span: .init(latitudeDelta: 0.01, longitudeDelta: 0.01))
 
-    static let area = DownloadArea(id: .init(), name: "Fish That I saw once last winter, but is now gone", region: region, status: .complete, sizeBytes: 13000000)
-    static let area2 = DownloadArea(id: .init(), name: nil, region: region, status: .complete, sizeBytes: 1300000)
+    static let area = DownloadArea(id: .init(), name: "Fish That I saw once last winter, but is now gone", region: region, sizeBytes: 13000000)
+    static let area2 = DownloadArea(id: .init(), name: nil, region: region, sizeBytes: 1300000)
     static var previews: some View {
         List {
             DownloadAreaListCell(area: area, index: 44, chartOptions: .init(), onShowOnMap: { })
