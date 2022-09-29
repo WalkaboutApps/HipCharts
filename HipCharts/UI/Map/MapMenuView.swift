@@ -17,7 +17,7 @@ struct MapMenuView: View {
     @Binding var showNewDownloadOverlayView: Bool
     @Binding var userLocationTracking: UserLocationTracking
     
-    let iconWidth: CGFloat = 28
+    let iconWidth: CGFloat = 24
     
     var body: some View {
         VStack(alignment: .trailing) {

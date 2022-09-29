@@ -6,8 +6,15 @@
 //
 
 import Foundation
+import MapKit
 
 typealias ChartOptions = MapState.Options.Chart
+
+let regionContainingUSA = MKCoordinateRegion(center: .init(latitude: 45.498251826915542,
+                                                     longitude: -96.523667515936935),
+                                       span: .init(latitudeDelta: 112.90309672478108,
+                                                   longitudeDelta: 89.096406350250135
+                                                  ))
 
 struct MapState: CodableAndRawRepresentable {
     struct Options: Codable {
@@ -24,7 +31,7 @@ struct MapState: CodableAndRawRepresentable {
         var chart = Chart()
     }
     var options = Options()
-    var regionChangeEvent = MapRegionChangeEvent(reason: .app, region: .init())
+    var regionChangeEvent = MapRegionChangeEvent(reason: .app, region: regionContainingUSA)
 }
 
 extension MapState {

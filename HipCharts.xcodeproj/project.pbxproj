@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		CF143C0828D51DA100904E7E /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF143C0728D51DA100904E7E /* Main.swift */; };
 		CF143C0A28D51DA100904E7E /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF143C0928D51DA100904E7E /* RootView.swift */; };
-		CF143C0C28D51DA600904E7E /* Main.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CF143C0B28D51DA600904E7E /* Main.xcassets */; };
+		CF143C0C28D51DA600904E7E /* AppIcon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CF143C0B28D51DA600904E7E /* AppIcon.xcassets */; };
 		CF143C0F28D51DA700904E7E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CF143C0E28D51DA700904E7E /* Preview Assets.xcassets */; };
 		CF143C1928D51DA700904E7E /* FreeChartsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF143C1828D51DA700904E7E /* FreeChartsTests.swift */; };
 		CF143C2328D51DA700904E7E /* FreeChartsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF143C2228D51DA700904E7E /* FreeChartsUITests.swift */; };
@@ -39,6 +39,9 @@
 		CF859ED428E37AD7005C9FD4 /* Codable+RawRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF859ED328E37AD7005C9FD4 /* Codable+RawRepresentable.swift */; };
 		CF859ED828E37E9B005C9FD4 /* MapRegionChangeEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF859ED728E37E9B005C9FD4 /* MapRegionChangeEvent.swift */; };
 		CF859EDA28E382F4005C9FD4 /* MapState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF859ED928E382F4005C9FD4 /* MapState.swift */; };
+		CFE2893028E51DBD00A495A5 /* Map.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFE2892F28E51DBD00A495A5 /* Map.xcassets */; };
+		CFE2893228E51DF600A495A5 /* Launch.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFE2893128E51DF600A495A5 /* Launch.xcassets */; };
+		CFE2893528E51EF000A495A5 /* Launch.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CFE2893428E51EF000A495A5 /* Launch.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,7 +65,7 @@
 		CF143C0428D51DA100904E7E /* HipCharts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HipCharts.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF143C0728D51DA100904E7E /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
 		CF143C0928D51DA100904E7E /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
-		CF143C0B28D51DA600904E7E /* Main.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Main.xcassets; sourceTree = "<group>"; };
+		CF143C0B28D51DA600904E7E /* AppIcon.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = AppIcon.xcassets; sourceTree = "<group>"; };
 		CF143C0E28D51DA700904E7E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		CF143C1428D51DA700904E7E /* HipChartsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HipChartsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF143C1828D51DA700904E7E /* FreeChartsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeChartsTests.swift; sourceTree = "<group>"; };
@@ -95,6 +98,9 @@
 		CF859ED728E37E9B005C9FD4 /* MapRegionChangeEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapRegionChangeEvent.swift; sourceTree = "<group>"; };
 		CF859ED928E382F4005C9FD4 /* MapState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapState.swift; sourceTree = "<group>"; };
 		CF859EDE28E50AE8005C9FD4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		CFE2892F28E51DBD00A495A5 /* Map.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Map.xcassets; sourceTree = "<group>"; };
+		CFE2893128E51DF600A495A5 /* Launch.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Launch.xcassets; sourceTree = "<group>"; };
+		CFE2893428E51EF000A495A5 /* Launch.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Launch.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,7 +161,8 @@
 			isa = PBXGroup;
 			children = (
 				CF859EDE28E50AE8005C9FD4 /* Info.plist */,
-				CF143C0B28D51DA600904E7E /* Main.xcassets */,
+				CF143C0B28D51DA600904E7E /* AppIcon.xcassets */,
+				CFE2893328E51EDB00A495A5 /* Launch */,
 				CF65A11D28D631F6004B241B /* App */,
 				CF65A12028D6560F004B241B /* Extensions */,
 				CF65A12328D65908004B241B /* Managers */,
@@ -259,6 +266,7 @@
 		CF65A12428D659D7004B241B /* Map */ = {
 			isa = PBXGroup;
 			children = (
+				CFE2892F28E51DBD00A495A5 /* Map.xcassets */,
 				CF143C3928D56D2100904E7E /* MapContainerView.swift */,
 				CF859ED928E382F4005C9FD4 /* MapState.swift */,
 				CF143C3728D5643400904E7E /* MapMenuView.swift */,
@@ -291,6 +299,15 @@
 				CF143C3B28D57C8400904E7E /* DownloadOverlayView.swift */,
 			);
 			path = "New Download Overlay";
+			sourceTree = "<group>";
+		};
+		CFE2893328E51EDB00A495A5 /* Launch */ = {
+			isa = PBXGroup;
+			children = (
+				CFE2893128E51DF600A495A5 /* Launch.xcassets */,
+				CFE2893428E51EF000A495A5 /* Launch.storyboard */,
+			);
+			path = Launch;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -397,8 +414,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CFE2893028E51DBD00A495A5 /* Map.xcassets in Resources */,
 				CF143C0F28D51DA700904E7E /* Preview Assets.xcassets in Resources */,
-				CF143C0C28D51DA600904E7E /* Main.xcassets in Resources */,
+				CFE2893228E51DF600A495A5 /* Launch.xcassets in Resources */,
+				CF143C0C28D51DA600904E7E /* AppIcon.xcassets in Resources */,
+				CFE2893528E51EF000A495A5 /* Launch.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -605,7 +625,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"HipCharts/Preview Content\"";
 				DEVELOPMENT_TEAM = 26629D7QMJ;
 				ENABLE_PREVIEWS = YES;
@@ -614,6 +634,7 @@
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "To show your location on the map";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = Launch;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -636,7 +657,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"HipCharts/Preview Content\"";
 				DEVELOPMENT_TEAM = 26629D7QMJ;
 				ENABLE_PREVIEWS = YES;
@@ -645,6 +666,7 @@
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "To show your location on the map";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = Launch;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;

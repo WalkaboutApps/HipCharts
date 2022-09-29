@@ -26,6 +26,8 @@ struct MapContainerView: View {
                 .navigationBarHidden(true)
                 .navigationTitle("Back")
         }
+        .navigationViewStyle(StackNavigationViewStyle())
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
     var map: some View {
