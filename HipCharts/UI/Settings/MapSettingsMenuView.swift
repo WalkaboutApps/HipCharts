@@ -25,6 +25,16 @@ struct MapSettingsMenuView: View {
                     }
                     .pickerStyle(SegmentedPickerStyle())
                 }
+                
+                VStack(alignment: .leading) {
+                    Text("Measurement Unit")
+                    Picker("Measurement Unit", selection: $options.map.measurementUnit) {
+                        ForEach(MeasurementUnit.allCases, id: \.rawValue) {
+                            Text($0.displayString.capitalized).tag($0)
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                }
             }
             
             Section(header: Text("Charts")) {

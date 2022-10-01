@@ -28,18 +28,27 @@ struct MapMenuView: View {
             VStack(spacing: 0) {
                 
                 Button {
-                    withAnimation {
-                        requestLocationPermissionIfNeeded()
-                        switch userLocationTracking {
-                        case .none:
-                            userLocationTracking = .follow
-                        case .follow:
-                            userLocationTracking = .followWithHeading
-                        case .followWithHeading:
-                            userLocationTracking = .follow
-                        @unknown default:
-                            userLocationTracking = .none
-                        }
+                    state.showDrawing = .init(onComplete: { _ in
+                        state.showDrawing = nil
+                    })
+                } label: {
+                    Image(systemName: "hand.draw")
+                        .resizable()
+                        .frame(width: iconWidth, height: iconWidth)
+                        .padding()
+                }
+                
+                Button {
+                    requestLocationPermissionIfNeeded()
+                    switch userLocationTracking {
+                    case .none:
+                        userLocationTracking = .follow
+                    case .follow:
+                        userLocationTracking = .followWithHeading
+                    case .followWithHeading:
+                        userLocationTracking = .follow
+                    @unknown default:
+                        userLocationTracking = .none
                     }
                 } label: {
                     Image(systemName: "location")

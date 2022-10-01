@@ -39,6 +39,13 @@
 		CF859ED428E37AD7005C9FD4 /* Codable+RawRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF859ED328E37AD7005C9FD4 /* Codable+RawRepresentable.swift */; };
 		CF859ED828E37E9B005C9FD4 /* MapRegionChangeEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF859ED728E37E9B005C9FD4 /* MapRegionChangeEvent.swift */; };
 		CF859EDA28E382F4005C9FD4 /* MapState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF859ED928E382F4005C9FD4 /* MapState.swift */; };
+		CFD8C29D28E8CC3B00B03091 /* MapDrawingUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD8C29A28E8CC3B00B03091 /* MapDrawingUIView.swift */; };
+		CFD8C29E28E8CC3B00B03091 /* MapDrawingVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD8C29B28E8CC3B00B03091 /* MapDrawingVM.swift */; };
+		CFD8C29F28E8CC3B00B03091 /* MapDrawingUIView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CFD8C29C28E8CC3B00B03091 /* MapDrawingUIView.xib */; };
+		CFD8C2A128E8CD1A00B03091 /* BaseVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD8C2A028E8CD1A00B03091 /* BaseVM.swift */; };
+		CFD8C2A328E8CE5000B03091 /* CLLocationCoordinate2D+WA.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD8C2A228E8CE5000B03091 /* CLLocationCoordinate2D+WA.swift */; };
+		CFD8C2A528E8D2BF00B03091 /* UIBezierPath+WA.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD8C2A428E8D2BF00B03091 /* UIBezierPath+WA.swift */; };
+		CFD8C2A728E8D31400B03091 /* UIView+WA.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD8C2A628E8D31400B03091 /* UIView+WA.swift */; };
 		CFE2893028E51DBD00A495A5 /* Map.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFE2892F28E51DBD00A495A5 /* Map.xcassets */; };
 		CFE2893228E51DF600A495A5 /* Launch.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFE2893128E51DF600A495A5 /* Launch.xcassets */; };
 		CFE2893528E51EF000A495A5 /* Launch.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CFE2893428E51EF000A495A5 /* Launch.storyboard */; };
@@ -98,6 +105,13 @@
 		CF859ED728E37E9B005C9FD4 /* MapRegionChangeEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapRegionChangeEvent.swift; sourceTree = "<group>"; };
 		CF859ED928E382F4005C9FD4 /* MapState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapState.swift; sourceTree = "<group>"; };
 		CF859EDE28E50AE8005C9FD4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		CFD8C29A28E8CC3B00B03091 /* MapDrawingUIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapDrawingUIView.swift; sourceTree = "<group>"; };
+		CFD8C29B28E8CC3B00B03091 /* MapDrawingVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapDrawingVM.swift; sourceTree = "<group>"; };
+		CFD8C29C28E8CC3B00B03091 /* MapDrawingUIView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MapDrawingUIView.xib; sourceTree = "<group>"; };
+		CFD8C2A028E8CD1A00B03091 /* BaseVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseVM.swift; sourceTree = "<group>"; };
+		CFD8C2A228E8CE5000B03091 /* CLLocationCoordinate2D+WA.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+WA.swift"; sourceTree = "<group>"; };
+		CFD8C2A428E8D2BF00B03091 /* UIBezierPath+WA.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIBezierPath+WA.swift"; sourceTree = "<group>"; };
+		CFD8C2A628E8D31400B03091 /* UIView+WA.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+WA.swift"; sourceTree = "<group>"; };
 		CFE2892F28E51DBD00A495A5 /* Map.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Map.xcassets; sourceTree = "<group>"; };
 		CFE2893128E51DF600A495A5 /* Launch.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Launch.xcassets; sourceTree = "<group>"; };
 		CFE2893428E51EF000A495A5 /* Launch.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Launch.storyboard; sourceTree = "<group>"; };
@@ -240,15 +254,18 @@
 		CF65A12028D6560F004B241B /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				CF65A12128D6561F004B241B /* MKCoordinateRegion+Codable.swift */,
+				CFD8C2A228E8CE5000B03091 /* CLLocationCoordinate2D+WA.swift */,
 				CF859ED328E37AD7005C9FD4 /* Codable+RawRepresentable.swift */,
-				CF65A12928D66D8E004B241B /* Result.swift */,
-				CF65A12B28D6737B004B241B /* URLResponse+Error.swift */,
-				CF65A12D28D67B39004B241B /* MKTileOverlayPath.swift */,
-				CF65A12F28D68460004B241B /* Combine.swift */,
-				CF65A13528D6BFAE004B241B /* UserDefaults+Codable.swift */,
-				CF65A13928D79368004B241B /* SwiftUI+UserDefaults.swift */,
 				CF65A14328D7EB65004B241B /* Color+UISystemColors.swift */,
+				CF65A12F28D68460004B241B /* Combine.swift */,
+				CF65A12128D6561F004B241B /* MKCoordinateRegion+Codable.swift */,
+				CF65A12D28D67B39004B241B /* MKTileOverlayPath.swift */,
+				CF65A12928D66D8E004B241B /* Result.swift */,
+				CF65A13928D79368004B241B /* SwiftUI+UserDefaults.swift */,
+				CFD8C2A428E8D2BF00B03091 /* UIBezierPath+WA.swift */,
+				CFD8C2A628E8D31400B03091 /* UIView+WA.swift */,
+				CF65A12B28D6737B004B241B /* URLResponse+Error.swift */,
+				CF65A13528D6BFAE004B241B /* UserDefaults+Codable.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -266,13 +283,13 @@
 		CF65A12428D659D7004B241B /* Map */ = {
 			isa = PBXGroup;
 			children = (
-				CFE2892F28E51DBD00A495A5 /* Map.xcassets */,
-				CF143C3928D56D2100904E7E /* MapContainerView.swift */,
-				CF859ED928E382F4005C9FD4 /* MapState.swift */,
-				CF143C3728D5643400904E7E /* MapMenuView.swift */,
-				CF143C3228D51E7D00904E7E /* MapView.swift */,
-				CF859ED728E37E9B005C9FD4 /* MapRegionChangeEvent.swift */,
 				CF65A12528D65A12004B241B /* ChartTileOverlay.swift */,
+				CF143C3928D56D2100904E7E /* MapContainerView.swift */,
+				CF143C3728D5643400904E7E /* MapMenuView.swift */,
+				CF859ED728E37E9B005C9FD4 /* MapRegionChangeEvent.swift */,
+				CF859ED928E382F4005C9FD4 /* MapState.swift */,
+				CFE2892F28E51DBD00A495A5 /* Map.xcassets */,
+				CFD8C2A828E8E0EA00B03091 /* Map View */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -299,6 +316,26 @@
 				CF143C3B28D57C8400904E7E /* DownloadOverlayView.swift */,
 			);
 			path = "New Download Overlay";
+			sourceTree = "<group>";
+		};
+		CFD8C29728E8C3DB00B03091 /* Drawing */ = {
+			isa = PBXGroup;
+			children = (
+				CFD8C2A028E8CD1A00B03091 /* BaseVM.swift */,
+				CFD8C29A28E8CC3B00B03091 /* MapDrawingUIView.swift */,
+				CFD8C29C28E8CC3B00B03091 /* MapDrawingUIView.xib */,
+				CFD8C29B28E8CC3B00B03091 /* MapDrawingVM.swift */,
+			);
+			path = Drawing;
+			sourceTree = "<group>";
+		};
+		CFD8C2A828E8E0EA00B03091 /* Map View */ = {
+			isa = PBXGroup;
+			children = (
+				CF143C3228D51E7D00904E7E /* MapView.swift */,
+				CFD8C29728E8C3DB00B03091 /* Drawing */,
+			);
+			path = "Map View";
 			sourceTree = "<group>";
 		};
 		CFE2893328E51EDB00A495A5 /* Launch */ = {
@@ -418,6 +455,7 @@
 				CF143C0F28D51DA700904E7E /* Preview Assets.xcassets in Resources */,
 				CFE2893228E51DF600A495A5 /* Launch.xcassets in Resources */,
 				CF143C0C28D51DA600904E7E /* AppIcon.xcassets in Resources */,
+				CFD8C29F28E8CC3B00B03091 /* MapDrawingUIView.xib in Resources */,
 				CFE2893528E51EF000A495A5 /* Launch.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -445,11 +483,15 @@
 			files = (
 				CF65A13828D6C565004B241B /* Logger.swift in Sources */,
 				CF143C3A28D56D2100904E7E /* MapContainerView.swift in Sources */,
+				CFD8C2A328E8CE5000B03091 /* CLLocationCoordinate2D+WA.swift in Sources */,
 				CF143C0A28D51DA100904E7E /* RootView.swift in Sources */,
+				CFD8C29D28E8CC3B00B03091 /* MapDrawingUIView.swift in Sources */,
+				CFD8C29E28E8CC3B00B03091 /* MapDrawingVM.swift in Sources */,
 				CF143C3328D51E7D00904E7E /* MapView.swift in Sources */,
 				CF65A13028D68460004B241B /* Combine.swift in Sources */,
 				CF143C3C28D57C8400904E7E /* DownloadOverlayView.swift in Sources */,
 				CF65A14128D7B27B004B241B /* ToastView.swift in Sources */,
+				CFD8C2A728E8D31400B03091 /* UIView+WA.swift in Sources */,
 				CF143C3828D5643400904E7E /* MapMenuView.swift in Sources */,
 				CF65A12E28D67B39004B241B /* MKTileOverlayPath.swift in Sources */,
 				CF65A11F28D631FF004B241B /* Application.swift in Sources */,
@@ -459,6 +501,7 @@
 				CF859ED828E37E9B005C9FD4 /* MapRegionChangeEvent.swift in Sources */,
 				CF65A12628D65A12004B241B /* ChartTileOverlay.swift in Sources */,
 				CF65A13428D6BC2E004B241B /* DownloadAreaListCell.swift in Sources */,
+				CFD8C2A128E8CD1A00B03091 /* BaseVM.swift in Sources */,
 				CF143C0828D51DA100904E7E /* Main.swift in Sources */,
 				CF65A13628D6BFAE004B241B /* UserDefaults+Codable.swift in Sources */,
 				CF65A12C28D6737B004B241B /* URLResponse+Error.swift in Sources */,
@@ -469,6 +512,7 @@
 				CF65A13A28D79368004B241B /* SwiftUI+UserDefaults.swift in Sources */,
 				CF65A14428D7EB65004B241B /* Color+UISystemColors.swift in Sources */,
 				CF65A11C28D631DE004B241B /* DownloadManager.swift in Sources */,
+				CFD8C2A528E8D2BF00B03091 /* UIBezierPath+WA.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -631,6 +675,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HipCharts/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Hip Charts";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "To show your location on the map";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -663,6 +708,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HipCharts/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Hip Charts";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "To show your location on the map";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

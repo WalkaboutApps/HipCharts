@@ -13,11 +13,20 @@ enum MapType: Int, Codable {
     case standard, satellite, hybrid, satelliteFlyover, hybridFlyover, mutedStandard
 }
 
+struct DrawState {
+    struct Drawing {
+        let coordinates: [CLLocationCoordinate2D]
+    }
+    var initial: Drawing? = nil
+    let onComplete: (Drawing) -> Void
+}
+
 struct MapView: UIViewRepresentable {
     typealias UIViewType = MKMapView
     
     @Binding var state: MapState
     @Binding var userLocationTracking: UserLocationTracking
+    let showDrawing: DrawState?
         
     func makeUIView(context: Context) -> MKMapView {
         let view = MKMapView()
@@ -61,6 +70,20 @@ struct MapView: UIViewRepresentable {
         if view.userTrackingMode != userLocationTracking {
             view.setUserTrackingMode(userLocationTracking, animated: true)
         }
+        
+        // drawing overlay UI View
+        let visibleDrawingView = view.subviews.first(where: { $0 is MapDrawingUIView }) as? MapDrawingUIView
+        if let drawingState = showDrawing,  visibleDrawingView == nil {
+            let vm = MapDrawingVM(overMap: view,
+                                  measurementUnit: state.options.map.measurementUnit,
+                                  onDone: drawingState.onComplete)
+            vm.coordinates = drawingState.initial?.coordinates ?? []
+            let drawingView = MapDrawingVM.createMeasureDrawingView()
+            drawingView.bind(to: vm)
+            view.addSubviewStretchedToBounds(drawingView)
+        } else if showDrawing == nil, let visible = visibleDrawingView {
+            visible.removeFromSuperview()
+        }
     }
 }
 
@@ -72,7 +95,7 @@ extension MapView {
     class Coordinator: NSObject, MKMapViewDelegate {
         @Binding var mapChangeEvent: MapRegionChangeEvent
         @Binding var userLocationTracking: UserLocationTracking
-        
+                
         init(mapChangeEvent: Binding<MapRegionChangeEvent>, userLocationTracking: Binding<UserLocationTracking>) {
             _mapChangeEvent = mapChangeEvent
             _userLocationTracking = userLocationTracking
@@ -114,6 +137,13 @@ extension MapType {
 
 struct MapView_Previews: PreviewProvider {
     static var previews: some View {
-        MapView(state: .constant(.init()), userLocationTracking: .constant(.none))
+            MapView(state: .constant(.init()),
+                    userLocationTracking: .constant(.none),
+                    showDrawing: .init(initial: .init(coordinates: [
+                        .init(latitude: 0, longitude: 0),
+                        .init(latitude: 30, longitude: 50),
+                        .init(latitude: 30, longitude: -50),
+                        .init(latitude: -40, longitude: -50)
+                    ]), onComplete: { _ in }))
     }
 }

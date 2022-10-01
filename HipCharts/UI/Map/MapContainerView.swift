@@ -15,6 +15,7 @@ struct MapContainerView: View {
     @State var showDownloadMenu = false
     @State var showNewDownloadOverlay = false
     @State var showSettingsMenu = false
+    @State var showDrawingOverlay = true
     @State var isLoadingCharts = true
     
     var defaults = app.dependencies.defaults
@@ -33,11 +34,12 @@ struct MapContainerView: View {
     var map: some View {
         ZStack(alignment: .bottomTrailing) {
             MapView(state: $state,
-                    userLocationTracking: $userLocationTracking)
-                .ignoresSafeArea()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    userLocationTracking: $userLocationTracking,
+                    showDrawing: state.showDrawing)
+            .ignoresSafeArea()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             
-            if !showNewDownloadOverlay {
+            if !showNewDownloadOverlay && state.showDrawing == nil {
                 MapMenuView(state: $state,
                             showDownloadMenu: $showDownloadMenu,
                             showSettingsMenu: $showSettingsMenu,
