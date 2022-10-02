@@ -26,42 +26,57 @@ func neededTiles(polygon: Polygon,
     }
     
     let polygonExteriorSegments = LineString(polygon.outerRing.coordinates).segments
+    
+    let topLeft = tilePath(.init(latitude: bbox.northEast.latitude,
+                                 longitude: bbox.southWest.longitude), zoom: zRange.lowerBound)
+    let bottomRight = tilePath(.init(latitude: bbox.southWest.latitude,
+                                     longitude: bbox.northEast.longitude), zoom: zRange.lowerBound)
+    var rangesToCheckInNextZoomLevel = [(x:topLeft.x ..< (bottomRight.x + 1), y: topLeft.y ..< (bottomRight.y + 1))]
 
     return zRange.flatMap { (z) -> [MKTileOverlayPath] in
-        let topLeft = tilePath(.init(latitude: bbox.northEast.latitude,
-                                     longitude: bbox.southWest.longitude), zoom: z)
-        let bottomRight = tilePath(.init(latitude: bbox.southWest.latitude,
-                                         longitude: bbox.northEast.longitude), zoom: z)
-        return (topLeft.x ... bottomRight.x).flatMap { x in
-            (topLeft.y ... bottomRight.y).compactMap { (y) -> TilePath? in
-                let tile = TilePath(x: x, y: y, z: z)
-                let tileExteriorSegments = tile.exteriorLineSegments
-                
-                // check for tile containing polygon
-                let coords = tileExteriorSegments.map { $0.0 } + [tileExteriorSegments[0].0]
-                let tilePolygon = Polygon(outerRing: .init(coordinates: coords))
-                if tilePolygon.contains(polygon.coordinates[0][0]) {
-                    return tile
+        let rangesToCheck = rangesToCheckInNextZoomLevel
+        rangesToCheckInNextZoomLevel.removeAll()
+        return rangesToCheck.flatMap { (xRange, yRange) in
+            xRange.flatMap { x in
+                yRange.compactMap { (y) -> TilePath? in
+                    let tile = TilePath(x: x, y: y, z: z)
+                    let tileExteriorSegments = tile.exteriorLineSegments
+                    
+                    // check for tile containing polygon
+                    let coords = tileExteriorSegments.map { $0.0 } + [tileExteriorSegments[0].0]
+                    let tilePolygon = Polygon(outerRing: .init(coordinates: coords))
+                    if tilePolygon.contains(polygon.coordinates[0][0]) {
+                        rangesToCheckInNextZoomLevel.append(rangeOfTilesInNextZoomLevelDown(tile: tile))
+                        return tile
+                    }
+                    
+                    // check for polygon containing tile
+                    if polygon.contains(tileExteriorSegments[0].0) {
+                        rangesToCheckInNextZoomLevel.append(rangeOfTilesInNextZoomLevelDown(tile: tile))
+                        return tile
+                    }
+                    
+                    // check for boundary intersection (expensive!)
+                    if tileExteriorSegments.first(where: { tileSegment in
+                        polygonExteriorSegments.first(where:  { polygonSegment in
+                            intersection(tileSegment, polygonSegment) != nil
+                        }) != nil
+                    }) != nil {
+                        rangesToCheckInNextZoomLevel.append(rangeOfTilesInNextZoomLevelDown(tile: tile))
+                        return tile
+                    }
+                    
+                    return  nil
                 }
-                
-                // check for polygon containing tile
-                if polygon.contains(tileExteriorSegments[0].0) {
-                    return tile
-                }
-                
-                // check for boundary intersection (expensive!)
-                if tileExteriorSegments.first(where: { tileSegment in
-                    polygonExteriorSegments.first(where:  { polygonSegment in
-                        intersection(tileSegment, polygonSegment) != nil
-                    }) != nil
-                }) != nil {
-                    return tile
-                }
-
-                return  nil
             }
         }
     }
+}
+
+func rangeOfTilesInNextZoomLevelDown(tile: TilePath) -> (x: Range<Int>, y: Range<Int>) {
+    let x = tile.x * 2
+    let y = tile.y * 2
+    return (x: x ..< (x + 2), y: y ..< (y + 2))
 }
 
 extension LineString {
@@ -84,7 +99,6 @@ private extension TilePath {
         ]
     }
 }
-
 
 private func neededTiles(region: MKCoordinateRegion,
                  zRange: ClosedRange<Int> = ChartTileOverlay.minimumZ ... ChartTileOverlay.maximumZ) -> [TilePath] {

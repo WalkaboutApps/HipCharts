@@ -194,7 +194,7 @@ func estimatedDownloadTileCount(polygon: Polygon) -> Int {
         let squarePolygonDimensionMeters = sqrt(polygon.area)
         let tileWidthMeters = tileWidthDegrees * metersPerDegreeLongitudeEquator
         let horizontalCount = Float(squarePolygonDimensionMeters) / tileWidthMeters
-        count += max(Int(powf(horizontalCount, 2) * 1.2 ), 1)
+        count += max(Int(powf(horizontalCount, 2) * 2 ), 1)
         logger.log("\(count) tiles in zoom level \(zoomLevel). ~\(Float(count) * averageFileSizeBytes / bytesInMB) mb")
     }
     return count
