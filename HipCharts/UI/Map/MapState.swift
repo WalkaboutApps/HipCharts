@@ -43,8 +43,9 @@ struct MapState: CodableAndRawRepresentable {
     var options = Options()
     var regionChangeEvent = MapRegionChangeEvent(reason: .app, region: regionContainingUSA)
     
-    // Not a stored property
+    // Not stored properties
     var showDrawing: DrawState?
+    var showPaywall = false
 }
 
 extension MapState {

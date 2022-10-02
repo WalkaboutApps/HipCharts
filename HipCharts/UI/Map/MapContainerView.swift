@@ -27,7 +27,16 @@ struct MapContainerView: View {
                 .navigationTitle("Back")
         }
         .navigationViewStyle(StackNavigationViewStyle())
+        .overlay(paywall)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    
+    var paywall: some View {
+        Group {
+            if state.showPaywall {
+                PaywallView(showPaywall: $state.showPaywall)
+            }
+        }
     }
     
     var map: some View {

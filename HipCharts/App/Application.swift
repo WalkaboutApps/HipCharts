@@ -17,6 +17,7 @@ struct Application {
 extension Application {
     struct Dependencies {
         let downloadManager = DownloadManager()
+        let paymentManager = PaymentManager()
         let defaults = UserDefaults.standard
         let logger = ConsoleLogger()
     }

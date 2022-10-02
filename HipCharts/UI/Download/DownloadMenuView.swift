@@ -15,6 +15,7 @@ struct DownloadMenuView: View {
     @Binding var showNewDownloadOverlay: Bool
     @Binding var showDownloadMenu: Bool
     @Binding var mapChangeEvent: MapRegionChangeEvent
+    @Binding var showPaywall: Bool
     let chartOptions: ChartOptions
     
     @State var selection: UUID?
@@ -35,8 +36,12 @@ struct DownloadMenuView: View {
             }
             
             Button {
-                showDownloadMenu = false
-                showNewDownloadOverlay = true
+                if app.dependencies.paymentManager.hasAccessToPaidFeature(.download) {
+                    showDownloadMenu = false
+                    showNewDownloadOverlay = true
+                } else {
+                    showPaywall = true
+                }
             } label: {
                 addImage
                     .padding()
@@ -77,8 +82,12 @@ struct DownloadMenuView: View {
             HStack {
                 Spacer()
                 Button {
-                    showDownloadMenu = false
-                    showNewDownloadOverlay = true
+                    if app.dependencies.paymentManager.hasAccessToPaidFeature(.download) {
+                        showDownloadMenu = false
+                        showNewDownloadOverlay = true
+                    } else {
+                        showPaywall = true
+                    }
                 } label: {
                     VStack {
                         Text("Download charts for offline use")
@@ -113,11 +122,13 @@ struct DownloadMenuView_Previews: PreviewProvider {
             DownloadMenuView(showNewDownloadOverlay: .constant(true),
                              showDownloadMenu: .constant(true),
                              mapChangeEvent: .constant(mapChangeEvent),
+                             showPaywall: .constant(false),
                              chartOptions: .init())
             
             DownloadMenuView(showNewDownloadOverlay: .constant(true),
                              showDownloadMenu: .constant(true),
                              mapChangeEvent: .constant(mapChangeEvent),
+                             showPaywall: .constant(false),
                              chartOptions: .init(),
                              areas: [area, area2])
         }
