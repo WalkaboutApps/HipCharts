@@ -10,7 +10,7 @@ import UIKit
 
 extension UIBezierPath {
     
-    func replaceWithInterpolatedPoints(interpolationPoints : [CGPoint], alpha : CGFloat = 1.0/3.0) {
+    func replaceWithInterpolatedPoints(interpolationPoints : [CGPoint], alpha : CGFloat = 1.0/3.0, close: Bool) {
         removeAllPoints()
         guard !interpolationPoints.isEmpty else { return }
         move(to: interpolationPoints[0])
@@ -60,6 +60,9 @@ extension UIBezierPath {
             let controlPoint2 = CGPoint(x: currentPoint.x - mx * alpha, y: currentPoint.y - my * alpha)
             
             self.addCurve(to: endPoint, controlPoint1: controlPoint1, controlPoint2: controlPoint2)
+        }
+        if close {
+            self.close()
         }
     }
 }

@@ -8,6 +8,7 @@
 
 import UIKit
 import MapKit
+import Turf
 
 enum MeasurementUnit: Int, Codable, CaseIterable {
     case miles, nauticalMiles, kilometers
@@ -39,19 +40,29 @@ class MapDrawingVM: VM {
     let touchProximity: CGFloat = 22
     private weak var previousMapDelegate: MKMapViewDelegate?
     private let map: MKMapView
+    private let onChange: ((DrawState.Drawing) -> Void)?
     private let onDone: (DrawState.Drawing) -> Void
     
+    let drawArea: Bool
     let measurementUnit: MeasurementUnit
     var points = [CGPoint]()
-    var coordinates = [CLLocationCoordinate2D]()
-    var history = [Range<Int>]()
+    var coordinates = [CLLocationCoordinate2D]() {
+        didSet { onChange?(.init(coordinates: coordinates)) }
+    }
+    var history = [[CLLocationCoordinate2D]]()
     
     var touchesInProgress = false
     private var appendToPathHead = false
     
-    init(overMap map: MKMapView, measurementUnit: MeasurementUnit, onDone: @escaping (DrawState.Drawing) -> Void){
+    init(overMap map: MKMapView,
+         drawArea: Bool,
+         measurementUnit: MeasurementUnit,
+         onChange: ((DrawState.Drawing) -> Void)?,
+         onDone: @escaping (DrawState.Drawing) -> Void){
         self.map = map
+        self.drawArea = drawArea
         self.measurementUnit = measurementUnit
+        self.onChange = onChange
         self.onDone = onDone
         super.init()
         previousMapDelegate = map.delegate
@@ -64,13 +75,9 @@ class MapDrawingVM: VM {
     }
     
     func undo(){
-        guard let range = history.popLast() else { return }
-        points.removeSubrange(range)
-        coordinates.removeSubrange(range)
-        if range.lowerBound == 0 { // if we just removed points from the head of the line: shift ranges down
-            let shift = range.upperBound
-            history = history.map({ Range(uncheckedBounds: (lower: $0.lowerBound - shift, upper: $0.upperBound - shift)) })
-        }
+        guard let previousCoordinates = history.popLast() else { return }
+        coordinates = previousCoordinates
+        points = coordinates.map { map.convert($0, toPointTo: map) }
         updateView()
     }
     
@@ -103,6 +110,9 @@ class MapDrawingVM: VM {
     func touchesBegan(at point: CGPoint){
         touchesInProgress = true
         touchesContinue(at: [point])
+        
+        // add previous state to undo history
+        history.append(coordinates)
     }
     
     func touchesContinue(at newPoints: [CGPoint]){
@@ -121,24 +131,18 @@ class MapDrawingVM: VM {
     
     func touchesEnded(){
         touchesInProgress = false
-        if appendToPathHead {
-            let oldLength = historicUpperBounds
-            let shift = points.count - oldLength
-            history = history.map({ Range(uncheckedBounds: (lower: $0.lowerBound+shift, upper: $0.upperBound+shift)) })
-            history.append(Range(uncheckedBounds: (lower: 0, upper: shift)))
-        }
-        else {
-            history.append(Range(uncheckedBounds: (lower: historicUpperBounds, upper: points.count)))
-        }
+        
+        // simplify path (move off main thread???)
+        logger.log("Before count: \(coordinates.count)")
+        let line = LineString(.init(coordinates: coordinates))
+            .simplified(tolerance: min(map.region.span.longitudeDelta, map.region.span.latitudeDelta) / min(map.frame.width, map.frame.height) * 5)
+        coordinates = line.coordinates
+        points = coordinates.map { map.convert($0, toPointTo: map) }
+        logger.log("Simplified count: \(coordinates.count)")
+
+        
         updateView()
     }
-    
-    private var historicUpperBounds: Int {
-        var ret = 0
-        history.forEach({ ret = max(ret, $0.upperBound) })
-        return ret
-    }
-    
 }
 
 // MARK: - Utility

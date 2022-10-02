@@ -7,6 +7,7 @@
 
 import SwiftUI
 import MapKit
+import Turf
 
 let bytesInAGb: Float = 1073741824
 private let averageFileSizeBytes: Float = 1000
@@ -17,12 +18,22 @@ struct DownloadOverlayView: View {
     
     @Binding var showDownloadMenu: Bool
     @Binding var showNewDownloadOverlayView: Bool
+    @Binding var showDrawing: DrawState?
     @Binding var mapChangeEvent: MapRegionChangeEvent
     let chartOptions: MapState.Options.Chart
     @State var showNameField = false
     @State var name: String = ""
+    @State var customPolygon: Polygon?
     
     @State private var geocoder: CLGeocoder?
+    
+    var titleText: String {
+        customPolygon == nil ? "Choose an extent to download" : "Draw a polygon"
+    }
+    
+    var subTitleText: String {
+        customPolygon == nil ? "or draw a polgon" : "or download all visible tiles"
+    }
             
     var body: some View {
         ZStack {
@@ -31,11 +42,32 @@ struct DownloadOverlayView: View {
             } else {
                 VStack {
                     
-                    Text("Choose an area to download")
-                        .multilineTextAlignment(.center)
-                        .font(.title3)
+                    VStack(spacing: 10) {
+                        Text(titleText)
+                            .lineLimit(20)
+                            .multilineTextAlignment(.center)
+                            .font(.title3)
+                        
+                        Button {
+                            if showDrawing != nil {
+                                showDrawing = nil
+                                customPolygon = nil
+                            } else {
+                                showDrawing = .init(drawArea: true) { drawing in
+                                    DispatchQueue.main.async {
+                                        customPolygon = .init(outerRing: .init(coordinates: drawing.coordinates))
+                                    }
+                                } onComplete: { _ in }
+                            }
+                        } label: {
+                            Text(subTitleText)
+                                .lineLimit(20)
+                                .multilineTextAlignment(.center)
+                        }
+
+                    }
                         .padding()
-                        .background(Color.systemBackground.opacity(0.8))
+                        .background(Color.systemBackground.opacity(0.9))
                         .cornerRadius(8)
                     
                     backButton
@@ -43,11 +75,13 @@ struct DownloadOverlayView: View {
                     Spacer()
                     
                     VStack(spacing: 10) {
-                        Button {
-                            showNameField = true
-                        } label: {
-                            Text("Download")
-                                .font(.title2)
+                        if (customPolygon == nil || customPolygon!.outerRing.coordinates.count > 0) {
+                            Button {
+                                showNameField = true
+                            } label: {
+                                Text("Download")
+                                    .font(.title2)
+                            }
                         }
                         
                         Text(estimatedSizeText)
@@ -65,7 +99,12 @@ struct DownloadOverlayView: View {
     }
     
     var estimatedSizeText: String {
-        let tileCount = estimatedDownloadTileCount(region: mapChangeEvent.region)
+        var tileCount: Int
+        if let polygon = customPolygon {
+            tileCount = estimatedDownloadTileCount(polygon: polygon)
+        } else {
+            tileCount = estimatedDownloadTileCount(region: mapChangeEvent.region)
+        }
         let sizeBytes = Float(tileCount) * averageFileSizeBytes
         let size = sizeBytes > bytesInAGb ? Float(sizeBytes) / bytesInAGb : Float(sizeBytes) / bytesInMB
         let unit = sizeBytes > bytesInAGb ? "gb" : "mb"
@@ -77,10 +116,11 @@ struct DownloadOverlayView: View {
         HStack {
             Button {
                 showNewDownloadOverlayView.toggle()
+                showDrawing = nil
             } label: {
                 Image(systemName: "chevron.left")
                     .padding()
-                    .background(Circle().fill(Color.systemBackground.opacity(0.8))
+                    .background(Circle().fill(Color.systemBackground.opacity(0.9))
                         )
             }
             Spacer()
@@ -101,11 +141,13 @@ struct DownloadOverlayView: View {
                 CustomTextField(text: $name, isFirstResponder: true)
                     .frame(height: 44)
                 Button(action: {
-                    showNewDownloadOverlayView = false
-                    showDownloadMenu = true
                     downloadManager.createAndDownloadNewArea(region: mapChangeEvent.region,
+                                                             customPolygon: customPolygon,
                                                              name: name == "" ? nil : name,
                                                              chartOptions: chartOptions)
+                    showDrawing = nil
+                    showNewDownloadOverlayView = false
+                    showDownloadMenu = true
                 }, label: {
                     Text("Download")
                         .font(.title2)
@@ -143,6 +185,21 @@ func estimatedDownloadTileCount(region: MKCoordinateRegion) -> Int {
     return count
 }
 
+let metersPerDegreeLongitudeEquator: Float = 111_139
+
+func estimatedDownloadTileCount(polygon: Polygon) -> Int {
+    var count = 0
+    (ChartTileOverlay.minimumZ ... ChartTileOverlay.maximumZ).forEach { zoomLevel in
+        let tileWidthDegrees = 360 / powf(2, Float(zoomLevel))
+        let squarePolygonDimensionMeters = sqrt(polygon.area)
+        let tileWidthMeters = tileWidthDegrees * metersPerDegreeLongitudeEquator
+        let horizontalCount = Float(squarePolygonDimensionMeters) / tileWidthMeters
+        count += max(Int(powf(horizontalCount, 2) * 1.2 ), 1)
+        logger.log("\(count) tiles in zoom level \(zoomLevel). ~\(Float(count) * averageFileSizeBytes / bytesInMB) mb")
+    }
+    return count
+}
+
 func getSafeArea() -> UIEdgeInsets {
     let keyWindow = UIApplication.shared.connectedScenes
         .filter({$0.activationState == .foregroundActive})
@@ -162,10 +219,12 @@ struct DownloadOverlayView_Previews: PreviewProvider {
         Group {
             DownloadOverlayView(showDownloadMenu: .constant(false),
                                 showNewDownloadOverlayView: .constant(false),
+                                showDrawing: .constant(nil),
                                 mapChangeEvent: .constant(mapChangeEvent),
                                 chartOptions: .init())
             DownloadOverlayView(showDownloadMenu: .constant(false),
                                 showNewDownloadOverlayView: .constant(false),
+                                showDrawing: .constant(nil),
                                 mapChangeEvent: .constant(mapChangeEvent),
                                 chartOptions: .init(), showNameField: true)
         }

@@ -15,7 +15,6 @@ struct MapContainerView: View {
     @State var showDownloadMenu = false
     @State var showNewDownloadOverlay = false
     @State var showSettingsMenu = false
-    @State var showDrawingOverlay = true
     @State var isLoadingCharts = true
     
     var defaults = app.dependencies.defaults
@@ -50,6 +49,7 @@ struct MapContainerView: View {
             if showNewDownloadOverlay {
                 DownloadOverlayView(showDownloadMenu: $showDownloadMenu,
                                     showNewDownloadOverlayView: $showNewDownloadOverlay,
+                                    showDrawing: $state.showDrawing,
                                     mapChangeEvent: $state.regionChangeEvent,
                                     chartOptions: state.options.chart)
             }

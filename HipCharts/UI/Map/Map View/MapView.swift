@@ -18,6 +18,8 @@ struct DrawState {
         let coordinates: [CLLocationCoordinate2D]
     }
     var initial: Drawing? = nil
+    var drawArea: Bool = false
+    var onChange: ((Drawing) -> Void)? = nil
     let onComplete: (Drawing) -> Void
 }
 
@@ -75,7 +77,9 @@ struct MapView: UIViewRepresentable {
         let visibleDrawingView = view.subviews.first(where: { $0 is MapDrawingUIView }) as? MapDrawingUIView
         if let drawingState = showDrawing,  visibleDrawingView == nil {
             let vm = MapDrawingVM(overMap: view,
+                                  drawArea: drawingState.drawArea,
                                   measurementUnit: state.options.map.measurementUnit,
+                                  onChange: drawingState.onChange,
                                   onDone: drawingState.onComplete)
             vm.coordinates = drawingState.initial?.coordinates ?? []
             let drawingView = MapDrawingVM.createMeasureDrawingView()

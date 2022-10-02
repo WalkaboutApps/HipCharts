@@ -19,6 +19,10 @@
 		CF143C3828D5643400904E7E /* MapMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF143C3728D5643400904E7E /* MapMenuView.swift */; };
 		CF143C3A28D56D2100904E7E /* MapContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF143C3928D56D2100904E7E /* MapContainerView.swift */; };
 		CF143C3C28D57C8400904E7E /* DownloadOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF143C3B28D57C8400904E7E /* DownloadOverlayView.swift */; };
+		CF32981128E902A300148E57 /* NeededTilesUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF32981028E902A300148E57 /* NeededTilesUtil.swift */; };
+		CF32981828E9071400148E57 /* Turf in Frameworks */ = {isa = PBXBuildFile; productRef = CF32981728E9071400148E57 /* Turf */; };
+		CF32981A28E9075B00148E57 /* DownloadArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF32981928E9075B00148E57 /* DownloadArea.swift */; };
+		CF32981C28E916D000148E57 /* Polygon+Region.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF32981B28E916D000148E57 /* Polygon+Region.swift */; };
 		CF65A11C28D631DE004B241B /* DownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF65A11B28D631DE004B241B /* DownloadManager.swift */; };
 		CF65A11F28D631FF004B241B /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF65A11E28D631FF004B241B /* Application.swift */; };
 		CF65A12228D6561F004B241B /* MKCoordinateRegion+Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF65A12128D6561F004B241B /* MKCoordinateRegion+Codable.swift */; };
@@ -84,6 +88,9 @@
 		CF143C3728D5643400904E7E /* MapMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapMenuView.swift; sourceTree = "<group>"; };
 		CF143C3928D56D2100904E7E /* MapContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapContainerView.swift; sourceTree = "<group>"; };
 		CF143C3B28D57C8400904E7E /* DownloadOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadOverlayView.swift; sourceTree = "<group>"; };
+		CF32981028E902A300148E57 /* NeededTilesUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeededTilesUtil.swift; sourceTree = "<group>"; };
+		CF32981928E9075B00148E57 /* DownloadArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadArea.swift; sourceTree = "<group>"; };
+		CF32981B28E916D000148E57 /* Polygon+Region.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Polygon+Region.swift"; sourceTree = "<group>"; };
 		CF65A11B28D631DE004B241B /* DownloadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManager.swift; sourceTree = "<group>"; };
 		CF65A11E28D631FF004B241B /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
 		CF65A12128D6561F004B241B /* MKCoordinateRegion+Codable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKCoordinateRegion+Codable.swift"; sourceTree = "<group>"; };
@@ -123,6 +130,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF143C3628D5451F00904E7E /* MapKit.framework in Frameworks */,
+				CF32981828E9071400148E57 /* Turf in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,13 +151,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		CF0A46B528E2C91D00BB0B6B /* PNG Compression */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "PNG Compression";
-			sourceTree = "<group>";
-		};
 		CF143BFB28D51DA100904E7E = {
 			isa = PBXGroup;
 			children = (
@@ -231,6 +232,16 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		CF32981228E902AD00148E57 /* Download */ = {
+			isa = PBXGroup;
+			children = (
+				CF65A11B28D631DE004B241B /* DownloadManager.swift */,
+				CF32981928E9075B00148E57 /* DownloadArea.swift */,
+				CF32981028E902A300148E57 /* NeededTilesUtil.swift */,
+			);
+			path = Download;
+			sourceTree = "<group>";
+		};
 		CF65A11A28D631C0004B241B /* Download */ = {
 			isa = PBXGroup;
 			children = (
@@ -266,6 +277,7 @@
 				CFD8C2A628E8D31400B03091 /* UIView+WA.swift */,
 				CF65A12B28D6737B004B241B /* URLResponse+Error.swift */,
 				CF65A13528D6BFAE004B241B /* UserDefaults+Codable.swift */,
+				CF32981B28E916D000148E57 /* Polygon+Region.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -273,8 +285,7 @@
 		CF65A12328D65908004B241B /* Managers */ = {
 			isa = PBXGroup;
 			children = (
-				CF65A11B28D631DE004B241B /* DownloadManager.swift */,
-				CF0A46B528E2C91D00BB0B6B /* PNG Compression */,
+				CF32981228E902AD00148E57 /* Download */,
 				CF65A13728D6C565004B241B /* Logger.swift */,
 			);
 			path = Managers;
@@ -363,6 +374,9 @@
 			dependencies = (
 			);
 			name = HipCharts;
+			packageProductDependencies = (
+				CF32981728E9071400148E57 /* Turf */,
+			);
 			productName = FreeCharts;
 			productReference = CF143C0428D51DA100904E7E /* HipCharts.app */;
 			productType = "com.apple.product-type.application";
@@ -435,6 +449,9 @@
 				Base,
 			);
 			mainGroup = CF143BFB28D51DA100904E7E;
+			packageReferences = (
+				CF32981628E9071400148E57 /* XCRemoteSwiftPackageReference "turf-swift" */,
+			);
 			productRefGroup = CF143C0528D51DA100904E7E /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -494,6 +511,7 @@
 				CFD8C2A728E8D31400B03091 /* UIView+WA.swift in Sources */,
 				CF143C3828D5643400904E7E /* MapMenuView.swift in Sources */,
 				CF65A12E28D67B39004B241B /* MKTileOverlayPath.swift in Sources */,
+				CF32981A28E9075B00148E57 /* DownloadArea.swift in Sources */,
 				CF65A11F28D631FF004B241B /* Application.swift in Sources */,
 				CF65A13E28D79D56004B241B /* MapSettingsMenuView.swift in Sources */,
 				CF65A12A28D66D8E004B241B /* Result.swift in Sources */,
@@ -501,6 +519,7 @@
 				CF859ED828E37E9B005C9FD4 /* MapRegionChangeEvent.swift in Sources */,
 				CF65A12628D65A12004B241B /* ChartTileOverlay.swift in Sources */,
 				CF65A13428D6BC2E004B241B /* DownloadAreaListCell.swift in Sources */,
+				CF32981C28E916D000148E57 /* Polygon+Region.swift in Sources */,
 				CFD8C2A128E8CD1A00B03091 /* BaseVM.swift in Sources */,
 				CF143C0828D51DA100904E7E /* Main.swift in Sources */,
 				CF65A13628D6BFAE004B241B /* UserDefaults+Codable.swift in Sources */,
@@ -508,6 +527,7 @@
 				CF859EDA28E382F4005C9FD4 /* MapState.swift in Sources */,
 				CF65A12828D669E2004B241B /* DisplayError.swift in Sources */,
 				CF65A12228D6561F004B241B /* MKCoordinateRegion+Codable.swift in Sources */,
+				CF32981128E902A300148E57 /* NeededTilesUtil.swift in Sources */,
 				CF859ED428E37AD7005C9FD4 /* Codable+RawRepresentable.swift in Sources */,
 				CF65A13A28D79368004B241B /* SwiftUI+UserDefaults.swift in Sources */,
 				CF65A14428D7EB65004B241B /* Color+UISystemColors.swift in Sources */,
@@ -845,6 +865,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CF32981628E9071400148E57 /* XCRemoteSwiftPackageReference "turf-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mapbox/turf-swift.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CF32981728E9071400148E57 /* Turf */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CF32981628E9071400148E57 /* XCRemoteSwiftPackageReference "turf-swift" */;
+			productName = Turf;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = CF143BFC28D51DA100904E7E /* Project object */;
 }

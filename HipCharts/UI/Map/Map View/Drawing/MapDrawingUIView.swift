@@ -43,7 +43,8 @@ class MapDrawingUIView: UIView, VMViewInterface {
     }
     
     func update(){
-        path.replaceWithInterpolatedPoints(interpolationPoints: vm?.points ?? [])
+        menuContainerView.isHidden = vm.drawArea
+        path.replaceWithInterpolatedPoints(interpolationPoints: vm?.points ?? [], close: vm.drawArea)
         drawingLayer.path = path.cgPath
         undoButton.isHidden = (vm?.history.count ?? 0) == 0
         clearButton.isHidden = (vm?.history.count ?? 0) < 2

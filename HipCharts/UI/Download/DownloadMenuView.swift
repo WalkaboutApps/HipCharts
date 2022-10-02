@@ -53,7 +53,7 @@ struct DownloadMenuView: View {
             ForEach(areas) { area in
                 DownloadAreaListCell(area: area,
                                      chartOptions: chartOptions) {
-                    mapChangeEvent = .init(reason: .app, region: area.region)
+                    mapChangeEvent = .init(reason: .app, region: area.customPolygon?.region ?? area.region)
                     showDownloadMenu = false
                 }
             }

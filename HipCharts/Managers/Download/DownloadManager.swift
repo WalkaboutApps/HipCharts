@@ -9,6 +9,7 @@ import Combine
 import Foundation
 import MapKit
 import CoreLocation
+import Turf
 
 enum DownloadStatus {
     case downloading(progress: Float)
@@ -21,15 +22,6 @@ enum DownloadStatus {
         }
         return false
     }
-}
-
-struct DownloadArea: Codable {
-    let id: UUID
-    var name: String?
-    let region: MKCoordinateRegion
-    /// Date of last completed download
-    var date: Date?
-    var sizeBytes: Int?
 }
 
 let maxConcurrentRequests = 20
@@ -96,9 +88,10 @@ class DownloadManager {
     }
     
     func createAndDownloadNewArea(region: MKCoordinateRegion,
+                                  customPolygon: Polygon?,
                                   name: String?,
                                   chartOptions: MapState.Options.Chart) {
-        let area = DownloadArea(id: UUID(), name: name, region: region)
+        let area = DownloadArea(id: UUID(), name: name, region: region, customPolygon: customPolygon)
         downloadedAreas.value.insert(area, at: 0)
         download(area: area, chartOptions: chartOptions)
     }
@@ -118,7 +111,7 @@ class DownloadManager {
         let cancellable = Just(())
             .receive(on: DispatchQueue.global(qos: .default))
             .flatMap { () -> AnyPublisher<(TilePath, Int), Never> in
-                let tiles = neededTiles(region: area.region)
+                let tiles = neededTiles(area: area)
                 return tiles.publisher
                     .map { ($0, tiles.count) }
                     .eraseToAnyPublisher()
@@ -190,20 +183,23 @@ class DownloadManager {
     func deleteDownload(area: DownloadArea) -> AnyPublisher<Void, DisplayError> {
         cancelDownload(area: area)
         return downloadedAreas.first()
-            .receive(on: diskQueue)
-            .tryMap { downloadedAreas in
+            .receive(on: DispatchQueue.global(qos: .default))
+            .tryMap { (downloadedAreas) -> (URL, Set<TilePath>) in
                 let r = self.getTileCacheDir()
                 guard case .success(let downloadDir) = r else {
                     throw r.error!
                 }
                 
-                var tilesToRemove = Set(neededTiles(region: area.region))
+                var tilesToRemove = Set(neededTiles(area: area))
                 downloadedAreas
                     .filter { $0.id != area.id }
                     .forEach {
-                        neededTiles(region: $0.region).forEach { tilesToRemove.remove($0) }
+                        neededTiles(area: $0).forEach { tilesToRemove.remove($0) }
                     }
-                
+                return (downloadDir, tilesToRemove)
+            }
+            .receive(on: diskQueue)
+            .tryMap { (downloadDir, tilesToRemove) in
                 try tilesToRemove.forEach {
                     let url = downloadFileURL(downloadDir: downloadDir, tilePath: $0)
                     if self.fileManager.fileExists(atPath: url.path) {
@@ -343,7 +339,7 @@ class DownloadManager {
     
     private func calculateAreaFileSizeBytes(area: DownloadArea) -> Int {
         guard case .success(let downloadDir) = getTileCacheDir() else { return 0 }
-            return neededTiles(region: area.region)
+            return neededTiles(area: area)
                 .map { (tile) -> Int in
                     let url = downloadFileURL(downloadDir: downloadDir, tilePath: tile)
                     let bytes = try? fileManager.attributesOfItem(atPath: url.path)[FileAttributeKey.size] as? UInt64
@@ -361,7 +357,7 @@ class DownloadManager {
                 guard let self = self, case .success(let dir) = self.getTileCacheDir() else {
                     throw self?.getTileCacheDir().error ?? .init(displayString: "Failed to get cache dir")
                 }
-                let allTiles = areas.flatMap { neededTiles(region: $0.region) }
+                let allTiles = areas.flatMap { neededTiles(area: $0) }
                 var cleanedCount = 0
                 try self.fileManager.contentsOfDirectory(atPath: dir.path).forEach { path in
                     let url = dir.appendingPathComponent(path)
@@ -423,29 +419,6 @@ private func tilePath(downloadFileURL: URL) -> TilePath? {
     }
     return .init(x: x, y: y, z: z)
 }
-
-
-func neededTiles(region: MKCoordinateRegion,
-                 zRange: ClosedRange<Int> = ChartTileOverlay.minimumZ ... ChartTileOverlay.maximumZ) -> [TilePath] {
-    zRange.flatMap { (z) -> [MKTileOverlayPath] in
-        let topLeft = tilePath(region.northWest, zoom: z)
-        let bottomRight = tilePath(region.southEast, zoom: z)
-        return (topLeft.x ... bottomRight.x).flatMap { x in
-            (topLeft.y ... bottomRight.y).map {
-                MKTileOverlayPath(x: x, y: $0, z: z)
-            }
-        }
-    }
-}
-
-private func tilePath(_ coordinate: CLLocationCoordinate2D, zoom: Int) -> TilePath {
-    let lat_rad = Float(coordinate.latitude) * .pi / 180
-    let n = pow(2, Float(zoom))
-    let xtile = Int((Float(coordinate.longitude) + 180.0) / 360.0 * n)
-    let ytile = Int((1.0 - asinh(tan(lat_rad)) / .pi) / 2.0 * n)
-    return .init(x: xtile, y: ytile, z: zoom, contentScaleFactor: 1)
-}
-
 
 // MARK: - Notes
 
