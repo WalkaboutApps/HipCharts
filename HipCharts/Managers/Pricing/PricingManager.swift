@@ -37,7 +37,6 @@ class PricingManager {
     
     private var updateListenerTask: Task<Void, Error>?
     private var productFetchTask: Task<Void, Error>?
-    private var subscribedUntilTimestamp: TimeInterval?
 
     init() {
         //Start a transaction listener as close to app launch as possible so you don't miss any transactions.
@@ -72,10 +71,7 @@ class PricingManager {
         if feature == .download, count == 0 { // first download is free
             return true
         }
-        if let expiration = subscribedUntilTimestamp {
-            return Date.now.timeIntervalSince(Date(timeIntervalSince1970: expiration)) < 60 * 60 * 24 * 30 // 30 days leeway
-        }
-        return false
+        return purchasedSubscriptionProduct.value != nil
     }
 
     func purchase(_ product: Product) async throws -> Transaction? {
@@ -127,7 +123,7 @@ class PricingManager {
 
     @MainActor
     func updateCustomerProductStatus() async {
-        var purchasedSubscription: Product?
+        var subscriptionPurchase: Transaction?
 
         //Iterate through all of the user's purchased products.
         for await result in Transaction.currentEntitlements {
@@ -141,8 +137,7 @@ class PricingManager {
                     break
                 case .autoRenewable:
                     if transaction.productID == subscriptionProduct.value?.id {
-                        purchasedSubscription = subscriptionProduct.value
-                        subscribedUntilTimestamp = transaction.expirationDate?.timeIntervalSince1970
+                        subscriptionPurchase = transaction
                     }
                 default:
                     break
@@ -151,8 +146,10 @@ class PricingManager {
                 print()
             }
         }
-
-        self.purchasedSubscriptionProduct.value = purchasedSubscription
+        
+        if let transaction = subscriptionPurchase, transaction.productID == self.subscriptionProduct.value?.id {
+            purchasedSubscriptionProduct.value = subscriptionProduct.value
+        }
     }
     
     func checkVerified<T>(_ result: VerificationResult<T>) throws -> T {
