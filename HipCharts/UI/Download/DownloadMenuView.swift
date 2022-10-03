@@ -36,7 +36,7 @@ struct DownloadMenuView: View {
             }
             
             Button {
-                if app.dependencies.paymentManager.hasAccessToPaidFeature(.download) {
+                if app.dependencies.pricingManager.hasAccessToPaidFeature(.download, count: areas.count) {
                     showDownloadMenu = false
                     showNewDownloadOverlay = true
                 } else {
@@ -82,7 +82,7 @@ struct DownloadMenuView: View {
             HStack {
                 Spacer()
                 Button {
-                    if app.dependencies.paymentManager.hasAccessToPaidFeature(.download) {
+                    if app.dependencies.pricingManager.hasAccessToPaidFeature(.download, count: areas.count) {
                         showDownloadMenu = false
                         showNewDownloadOverlay = true
                     } else {

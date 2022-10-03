@@ -43,7 +43,7 @@ class MapDrawingVM: VM {
     private let onChange: ((DrawState.Drawing) -> Void)?
     private let onDone: (DrawState.Drawing) -> Void
     
-    let drawArea: Bool
+    let drawSimplifiedArea: Bool
     let measurementUnit: MeasurementUnit
     var points = [CGPoint]()
     var coordinates = [CLLocationCoordinate2D]() {
@@ -55,12 +55,12 @@ class MapDrawingVM: VM {
     private var appendToPathHead = false
     
     init(overMap map: MKMapView,
-         drawArea: Bool,
+         drawSimplifiedArea: Bool,
          measurementUnit: MeasurementUnit,
          onChange: ((DrawState.Drawing) -> Void)?,
          onDone: @escaping (DrawState.Drawing) -> Void){
         self.map = map
-        self.drawArea = drawArea
+        self.drawSimplifiedArea = drawSimplifiedArea
         self.measurementUnit = measurementUnit
         self.onChange = onChange
         self.onDone = onDone
@@ -132,13 +132,14 @@ class MapDrawingVM: VM {
     func touchesEnded(){
         touchesInProgress = false
         
-        // simplify path (move off main thread???)
-        logger.log("Before count: \(coordinates.count)")
-        let line = LineString(.init(coordinates: coordinates))
-            .simplified(tolerance: min(map.region.span.longitudeDelta, map.region.span.latitudeDelta) / min(map.frame.width, map.frame.height) * 5)
-        coordinates = line.coordinates
-        points = coordinates.map { map.convert($0, toPointTo: map) }
-        logger.log("Simplified count: \(coordinates.count)")
+        if drawSimplifiedArea {
+            logger.log("Before count: \(coordinates.count)")
+            let line = LineString(.init(coordinates: coordinates))
+                .simplified(tolerance: min(map.region.span.longitudeDelta, map.region.span.latitudeDelta) / min(map.frame.width, map.frame.height) * 5)
+            coordinates = line.coordinates
+            points = coordinates.map { map.convert($0, toPointTo: map) }
+            logger.log("Simplified count: \(coordinates.count)")
+        }
 
         
         updateView()

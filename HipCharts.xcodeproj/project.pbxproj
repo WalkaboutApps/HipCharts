@@ -23,8 +23,16 @@
 		CF32981828E9071400148E57 /* Turf in Frameworks */ = {isa = PBXBuildFile; productRef = CF32981728E9071400148E57 /* Turf */; };
 		CF32981A28E9075B00148E57 /* DownloadArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF32981928E9075B00148E57 /* DownloadArea.swift */; };
 		CF32981C28E916D000148E57 /* Polygon+Region.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF32981B28E916D000148E57 /* Polygon+Region.swift */; };
-		CF32981E28E9F9AB00148E57 /* PaymentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF32981D28E9F9AB00148E57 /* PaymentManager.swift */; };
+		CF32981E28E9F9AB00148E57 /* PricingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF32981D28E9F9AB00148E57 /* PricingManager.swift */; };
 		CF32982228E9FBA100148E57 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF32982128E9FBA100148E57 /* PaywallView.swift */; };
+		CF32982428EA51AC00148E57 /* HipCharts.storekit in Resources */ = {isa = PBXBuildFile; fileRef = CF32982328EA51AC00148E57 /* HipCharts.storekit */; };
+		CF32982828EA521000148E57 /* Testing.storekit in Resources */ = {isa = PBXBuildFile; fileRef = CF32982728EA521000148E57 /* Testing.storekit */; };
+		CF32982A28EA534F00148E57 /* StoreKitTestCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = CF32982928EA534F00148E57 /* StoreKitTestCertificate.cer */; };
+		CF32983928EB3D2600148E57 /* BuyButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF32982F28EB3D2500148E57 /* BuyButtonStyle.swift */; };
+		CF32983A28EB3D2600148E57 /* ListCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF32983028EB3D2500148E57 /* ListCellView.swift */; };
+		CF32983B28EB3D2600148E57 /* StatusInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF32983128EB3D2600148E57 /* StatusInfoView.swift */; };
+		CF32983D28EB3D2600148E57 /* StoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF32983328EB3D2600148E57 /* StoreView.swift */; };
+		CF32983F28EB3D2600148E57 /* SubscriptionsSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF32983528EB3D2600148E57 /* SubscriptionsSectionView.swift */; };
 		CF65A11C28D631DE004B241B /* DownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF65A11B28D631DE004B241B /* DownloadManager.swift */; };
 		CF65A11F28D631FF004B241B /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF65A11E28D631FF004B241B /* Application.swift */; };
 		CF65A12228D6561F004B241B /* MKCoordinateRegion+Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF65A12128D6561F004B241B /* MKCoordinateRegion+Codable.swift */; };
@@ -93,8 +101,16 @@
 		CF32981028E902A300148E57 /* NeededTilesUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeededTilesUtil.swift; sourceTree = "<group>"; };
 		CF32981928E9075B00148E57 /* DownloadArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadArea.swift; sourceTree = "<group>"; };
 		CF32981B28E916D000148E57 /* Polygon+Region.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Polygon+Region.swift"; sourceTree = "<group>"; };
-		CF32981D28E9F9AB00148E57 /* PaymentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentManager.swift; sourceTree = "<group>"; };
+		CF32981D28E9F9AB00148E57 /* PricingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PricingManager.swift; sourceTree = "<group>"; };
 		CF32982128E9FBA100148E57 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
+		CF32982328EA51AC00148E57 /* HipCharts.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = HipCharts.storekit; sourceTree = "<group>"; };
+		CF32982728EA521000148E57 /* Testing.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Testing.storekit; sourceTree = "<group>"; };
+		CF32982928EA534F00148E57 /* StoreKitTestCertificate.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = StoreKitTestCertificate.cer; sourceTree = "<group>"; };
+		CF32982F28EB3D2500148E57 /* BuyButtonStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuyButtonStyle.swift; sourceTree = "<group>"; };
+		CF32983028EB3D2500148E57 /* ListCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListCellView.swift; sourceTree = "<group>"; };
+		CF32983128EB3D2600148E57 /* StatusInfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusInfoView.swift; sourceTree = "<group>"; };
+		CF32983328EB3D2600148E57 /* StoreView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreView.swift; sourceTree = "<group>"; };
+		CF32983528EB3D2600148E57 /* SubscriptionsSectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubscriptionsSectionView.swift; sourceTree = "<group>"; };
 		CF65A11B28D631DE004B241B /* DownloadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManager.swift; sourceTree = "<group>"; };
 		CF65A11E28D631FF004B241B /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
 		CF65A12128D6561F004B241B /* MKCoordinateRegion+Codable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKCoordinateRegion+Codable.swift"; sourceTree = "<group>"; };
@@ -220,7 +236,7 @@
 			isa = PBXGroup;
 			children = (
 				CF143C0928D51DA100904E7E /* RootView.swift */,
-				CF32982128E9FBA100148E57 /* PaywallView.swift */,
+				CF32984028EB3DE200148E57 /* Pricing */,
 				CF65A11A28D631C0004B241B /* Download */,
 				CF65A12428D659D7004B241B /* Map */,
 				CF65A14228D7B596004B241B /* Settings */,
@@ -247,12 +263,15 @@
 			path = Download;
 			sourceTree = "<group>";
 		};
-		CF32981F28E9F9B200148E57 /* Payment */ = {
+		CF32981F28E9F9B200148E57 /* Pricing */ = {
 			isa = PBXGroup;
 			children = (
-				CF32981D28E9F9AB00148E57 /* PaymentManager.swift */,
+				CF32981D28E9F9AB00148E57 /* PricingManager.swift */,
+				CF32982328EA51AC00148E57 /* HipCharts.storekit */,
+				CF32982728EA521000148E57 /* Testing.storekit */,
+				CF32982928EA534F00148E57 /* StoreKitTestCertificate.cer */,
 			);
-			path = Payment;
+			path = Pricing;
 			sourceTree = "<group>";
 		};
 		CF32982028E9FA8400148E57 /* Menu */ = {
@@ -261,6 +280,27 @@
 				CF143C3728D5643400904E7E /* MapMenuView.swift */,
 			);
 			path = Menu;
+			sourceTree = "<group>";
+		};
+		CF32982B28EB3D1800148E57 /* From Apple */ = {
+			isa = PBXGroup;
+			children = (
+				CF32982F28EB3D2500148E57 /* BuyButtonStyle.swift */,
+				CF32983028EB3D2500148E57 /* ListCellView.swift */,
+				CF32983128EB3D2600148E57 /* StatusInfoView.swift */,
+				CF32983328EB3D2600148E57 /* StoreView.swift */,
+				CF32983528EB3D2600148E57 /* SubscriptionsSectionView.swift */,
+			);
+			path = "From Apple";
+			sourceTree = "<group>";
+		};
+		CF32984028EB3DE200148E57 /* Pricing */ = {
+			isa = PBXGroup;
+			children = (
+				CF32982128E9FBA100148E57 /* PaywallView.swift */,
+				CF32982B28EB3D1800148E57 /* From Apple */,
+			);
+			path = Pricing;
 			sourceTree = "<group>";
 		};
 		CF65A11A28D631C0004B241B /* Download */ = {
@@ -308,7 +348,7 @@
 			children = (
 				CF32981228E902AD00148E57 /* Download */,
 				CF65A13728D6C565004B241B /* Logger.swift */,
-				CF32981F28E9F9B200148E57 /* Payment */,
+				CF32981F28E9F9B200148E57 /* Pricing */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -491,8 +531,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				CFE2893028E51DBD00A495A5 /* Map.xcassets in Resources */,
+				CF32982828EA521000148E57 /* Testing.storekit in Resources */,
+				CF32982428EA51AC00148E57 /* HipCharts.storekit in Resources */,
 				CF143C0F28D51DA700904E7E /* Preview Assets.xcassets in Resources */,
 				CFE2893228E51DF600A495A5 /* Launch.xcassets in Resources */,
+				CF32982A28EA534F00148E57 /* StoreKitTestCertificate.cer in Resources */,
 				CF143C0C28D51DA600904E7E /* AppIcon.xcassets in Resources */,
 				CFD8C29F28E8CC3B00B03091 /* MapDrawingUIView.xib in Resources */,
 				CFE2893528E51EF000A495A5 /* Launch.storyboard in Resources */,
@@ -520,6 +563,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF32983B28EB3D2600148E57 /* StatusInfoView.swift in Sources */,
 				CF65A13828D6C565004B241B /* Logger.swift in Sources */,
 				CF143C3A28D56D2100904E7E /* MapContainerView.swift in Sources */,
 				CFD8C2A328E8CE5000B03091 /* CLLocationCoordinate2D+WA.swift in Sources */,
@@ -527,12 +571,13 @@
 				CFD8C29D28E8CC3B00B03091 /* MapDrawingUIView.swift in Sources */,
 				CFD8C29E28E8CC3B00B03091 /* MapDrawingVM.swift in Sources */,
 				CF143C3328D51E7D00904E7E /* MapView.swift in Sources */,
+				CF32983A28EB3D2600148E57 /* ListCellView.swift in Sources */,
 				CF65A13028D68460004B241B /* Combine.swift in Sources */,
 				CF143C3C28D57C8400904E7E /* DownloadOverlayView.swift in Sources */,
 				CF65A14128D7B27B004B241B /* ToastView.swift in Sources */,
 				CFD8C2A728E8D31400B03091 /* UIView+WA.swift in Sources */,
 				CF143C3828D5643400904E7E /* MapMenuView.swift in Sources */,
-				CF32981E28E9F9AB00148E57 /* PaymentManager.swift in Sources */,
+				CF32981E28E9F9AB00148E57 /* PricingManager.swift in Sources */,
 				CF65A12E28D67B39004B241B /* MKTileOverlayPath.swift in Sources */,
 				CF32981A28E9075B00148E57 /* DownloadArea.swift in Sources */,
 				CF65A11F28D631FF004B241B /* Application.swift in Sources */,
@@ -551,11 +596,14 @@
 				CF859EDA28E382F4005C9FD4 /* MapState.swift in Sources */,
 				CF65A12828D669E2004B241B /* DisplayError.swift in Sources */,
 				CF65A12228D6561F004B241B /* MKCoordinateRegion+Codable.swift in Sources */,
+				CF32983F28EB3D2600148E57 /* SubscriptionsSectionView.swift in Sources */,
 				CF32981128E902A300148E57 /* NeededTilesUtil.swift in Sources */,
 				CF859ED428E37AD7005C9FD4 /* Codable+RawRepresentable.swift in Sources */,
 				CF65A13A28D79368004B241B /* SwiftUI+UserDefaults.swift in Sources */,
 				CF65A14428D7EB65004B241B /* Color+UISystemColors.swift in Sources */,
+				CF32983928EB3D2600148E57 /* BuyButtonStyle.swift in Sources */,
 				CF65A11C28D631DE004B241B /* DownloadManager.swift in Sources */,
+				CF32983D28EB3D2600148E57 /* StoreView.swift in Sources */,
 				CFD8C2A528E8D2BF00B03091 /* UIBezierPath+WA.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -726,7 +774,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = Launch;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -759,7 +807,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = Launch;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

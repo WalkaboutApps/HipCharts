@@ -51,7 +51,6 @@ struct Toast: ViewModifier {
                     RoundedRectangle(cornerRadius: 8).fill(config.backgroundColor)
                 )
         )
-        .animation(config.animation)
         .transition(config.transition)
     }
     

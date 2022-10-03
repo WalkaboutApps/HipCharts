@@ -77,7 +77,7 @@ struct MapView: UIViewRepresentable {
         let visibleDrawingView = view.subviews.first(where: { $0 is MapDrawingUIView }) as? MapDrawingUIView
         if let drawingState = showDrawing,  visibleDrawingView == nil {
             let vm = MapDrawingVM(overMap: view,
-                                  drawArea: drawingState.drawArea,
+                                  drawSimplifiedArea: drawingState.drawArea,
                                   measurementUnit: state.options.map.measurementUnit,
                                   onChange: drawingState.onChange,
                                   onDone: drawingState.onComplete)

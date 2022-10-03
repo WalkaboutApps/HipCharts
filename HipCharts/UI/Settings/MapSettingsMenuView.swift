@@ -62,8 +62,9 @@ struct MapSettingsMenuView: View {
                         .lineLimit(20)
                         .font(.caption)
                 }
-
             }
+            
+            SubscriptionsSectionView()
         }
         .navigationTitle("Settings")
     }
