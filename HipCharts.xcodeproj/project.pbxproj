@@ -50,6 +50,7 @@
 		CF65A13E28D79D56004B241B /* MapSettingsMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF65A13D28D79D56004B241B /* MapSettingsMenuView.swift */; };
 		CF65A14128D7B27B004B241B /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF65A14028D7B27B004B241B /* ToastView.swift */; };
 		CF65A14428D7EB65004B241B /* Color+UISystemColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF65A14328D7EB65004B241B /* Color+UISystemColors.swift */; };
+		CF67800D2905CB030007DFAF /* ChartDisplayParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF67800C2905CB030007DFAF /* ChartDisplayParams.swift */; };
 		CF859ED428E37AD7005C9FD4 /* Codable+RawRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF859ED328E37AD7005C9FD4 /* Codable+RawRepresentable.swift */; };
 		CF859ED828E37E9B005C9FD4 /* MapRegionChangeEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF859ED728E37E9B005C9FD4 /* MapRegionChangeEvent.swift */; };
 		CF859EDA28E382F4005C9FD4 /* MapState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF859ED928E382F4005C9FD4 /* MapState.swift */; };
@@ -128,6 +129,7 @@
 		CF65A13D28D79D56004B241B /* MapSettingsMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSettingsMenuView.swift; sourceTree = "<group>"; };
 		CF65A14028D7B27B004B241B /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 		CF65A14328D7EB65004B241B /* Color+UISystemColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+UISystemColors.swift"; sourceTree = "<group>"; };
+		CF67800C2905CB030007DFAF /* ChartDisplayParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartDisplayParams.swift; sourceTree = "<group>"; };
 		CF859ED328E37AD7005C9FD4 /* Codable+RawRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Codable+RawRepresentable.swift"; sourceTree = "<group>"; };
 		CF859ED728E37E9B005C9FD4 /* MapRegionChangeEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapRegionChangeEvent.swift; sourceTree = "<group>"; };
 		CF859ED928E382F4005C9FD4 /* MapState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapState.swift; sourceTree = "<group>"; };
@@ -406,6 +408,7 @@
 			children = (
 				CF143C3228D51E7D00904E7E /* MapView.swift */,
 				CF65A12528D65A12004B241B /* ChartTileOverlay.swift */,
+				CF67800C2905CB030007DFAF /* ChartDisplayParams.swift */,
 				CF859ED728E37E9B005C9FD4 /* MapRegionChangeEvent.swift */,
 			);
 			path = "Map View";
@@ -589,6 +592,7 @@
 				CF65A12628D65A12004B241B /* ChartTileOverlay.swift in Sources */,
 				CF65A13428D6BC2E004B241B /* DownloadAreaListCell.swift in Sources */,
 				CF32981C28E916D000148E57 /* Polygon+Region.swift in Sources */,
+				CF67800D2905CB030007DFAF /* ChartDisplayParams.swift in Sources */,
 				CFD8C2A128E8CD1A00B03091 /* BaseVM.swift in Sources */,
 				CF143C0828D51DA100904E7E /* Main.swift in Sources */,
 				CF65A13628D6BFAE004B241B /* UserDefaults+Codable.swift in Sources */,
@@ -761,7 +765,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"HipCharts/Preview Content\"";
 				DEVELOPMENT_TEAM = 26629D7QMJ;
 				ENABLE_PREVIEWS = YES;
@@ -779,7 +783,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = walkaboutapps.HipCharts;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -794,7 +798,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"HipCharts/Preview Content\"";
 				DEVELOPMENT_TEAM = 26629D7QMJ;
 				ENABLE_PREVIEWS = YES;
@@ -812,7 +816,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = walkaboutapps.HipCharts;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

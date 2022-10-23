@@ -34,6 +34,12 @@ struct MapState: CodableAndRawRepresentable {
             var textSize = ChartTextSize.medium
             var showChartAreasAndLimits = true
             var highQuality = false
+            
+            private var _depthUnit: DepthUnit?
+            var depthUnit: DepthUnit {
+                get { _depthUnit ?? .feet }
+                set { _depthUnit = newValue }
+            }
         }
         // See note about editing above
         var map = Map()

@@ -38,6 +38,21 @@ struct MapSettingsMenuView: View {
             }
             
             Section(header: Text("Charts")) {
+                
+                VStack(alignment: .leading) {
+                    Text("Depth Unit")
+                    Picker("Depth Unit", selection: $options.chart.depthUnit) {
+                        ForEach(DepthUnit.allCases, id: \.rawValue) {
+                            Text($0.displayString).tag($0)
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    Text("* To apply this value to previously downloaded charts, tap the \"Update\" buttons in the Chart Download page")
+                        .fixedSize(horizontal: false, vertical: true)
+                        .lineLimit(20)
+                        .font(.caption)
+                }
+                
                 VStack(alignment: .leading) {
                     Text("Chart Text Size")
                     Picker("Chart Text Size", selection: $options.chart.textSize) {
@@ -104,6 +119,20 @@ extension ChartTextSize {
             return "Medium"
         case .small:
             return "Small"
+        }
+    }
+}
+
+
+extension DepthUnit {
+    var displayString: String {
+        switch self {
+        case .meters:
+            return "Meters"
+        case .feet:
+            return "Feet"
+        case .fathoms:
+            return "Fathoms"
         }
     }
 }

@@ -9,6 +9,7 @@ import StoreKit
 import SwiftUI
 
 struct SubscriptionsSectionView: View {
+    @Environment(\.openURL) var openURL
     
     var showSectionTitle: Bool = true
 
@@ -44,6 +45,23 @@ struct SubscriptionsSectionView: View {
                             .foregroundColor(Color.accentColor)
                     })
                     .buttonStyle(.plain)
+                    
+                    HStack {
+                        Button {
+                            openURL(URL(string: "https://walkaboutapps.wixsite.com/apps/privacy")!)
+                        } label: {
+                            Text("Privacy")
+                                .foregroundColor(Color.accentColor)
+                        }
+                        .buttonStyle(.plain)
+                        Text("&")
+                        Button {
+                            openURL(URL(string: "https://walkaboutapps.wixsite.com/apps/terms-of-use")!)
+                        } label: {
+                            Text("Terms of Use")
+                                .foregroundColor(Color.accentColor)
+                        }
+                    }
                 }
             }
         }

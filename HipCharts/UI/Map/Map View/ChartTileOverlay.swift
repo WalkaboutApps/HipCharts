@@ -14,6 +14,12 @@ enum ChartTextSize: Int, Codable, CaseIterable {
     case large = 360
 }
 
+enum DepthUnit: Int, Codable, CaseIterable {
+    case meters = 1
+    case feet = 2
+    case fathoms = 3
+}
+
 class ChartTileOverlay: MKTileOverlay {
     static let minimumZ = 3
     static let maximumZ = 17
@@ -21,6 +27,12 @@ class ChartTileOverlay: MKTileOverlay {
     let options: MapState.Options.Chart
     
     private let downloadManager: DownloadManager
+    
+    private lazy var displayParams = ChartDisplayParams(ECDISParameters:
+            .init(DynamicParameters: .init(Parameter: [
+                .init(name: .DisplayDepthUnits, value: .integer(options.depthUnit.rawValue))
+            ],
+                                           ParameterGroup: nil))).escapedQueryString
     
     required init(options: MapState.Options.Chart,
                   downloadManager: DownloadManager = app.dependencies.downloadManager) {
@@ -41,7 +53,7 @@ class ChartTileOverlay: MKTileOverlay {
         let (minY, maxX) = convertToWebMercator(coordinate: topLeftCoordinateOfXYZTile(x: path.x, y: path.y, z: path.z))
         let (maxY, minX) = convertToWebMercator(coordinate: topLeftCoordinateOfXYZTile(x: path.x + 1, y: path.y + 1, z: path.z))
         
-        let urlString = "https://gis.charttools.noaa.gov/arcgis/rest/services/MCS/NOAAChartDisplay/MapServer/exts/MaritimeChartService/MapServer/export?transparent=true\(warningLayersParam)&size=\(tileWidth)%2C\(tileWidth)&bbox=\(minY)%2C\(minX)%2C\(maxY)%2C\(maxX)&bboxsr=3857&imagesr=3857&dpi=\(dpi)"
+        let urlString = "https://gis.charttools.noaa.gov/arcgis/rest/services/MCS/NOAAChartDisplay/MapServer/exts/MaritimeChartService/MapServer/export?transparent=true\(warningLayersParam)&size=\(tileWidth)%2C\(tileWidth)&bbox=\(minY)%2C\(minX)%2C\(maxY)%2C\(maxX)&bboxsr=3857&imagesr=3857&dpi=\(dpi)&display_params=\(displayParams)"
         return URL(string: urlString)!
     }
     

@@ -72,6 +72,7 @@ struct PaywallView: View {
                     SubscriptionsSectionView(showSectionTitle: false)
                         .listRowSeparator(.hidden)
                 }
+                
             }
         }
         .listStyle(.plain)
@@ -109,7 +110,6 @@ extension PaidFeature {
 struct PaywallView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            PaywallView(showPaywall: .constant(true))
             PaywallView(showPaywall: .constant(true))
         }
     }
