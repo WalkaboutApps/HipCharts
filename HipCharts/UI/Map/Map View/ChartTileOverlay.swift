@@ -27,6 +27,7 @@ class ChartTileOverlay: MKTileOverlay {
     let options: MapState.Options.Chart
     
     private let downloadManager: DownloadManager
+    private let tileLoader: TileLoader
     
     private lazy var displayParams = ChartDisplayParams(ECDISParameters:
             .init(DynamicParameters: .init(Parameter: [
@@ -35,9 +36,11 @@ class ChartTileOverlay: MKTileOverlay {
                                            ParameterGroup: nil))).escapedQueryString
     
     required init(options: MapState.Options.Chart,
-                  downloadManager: DownloadManager = app.dependencies.downloadManager) {
+                  downloadManager: DownloadManager = app.dependencies.downloadManager,
+                  tileLoader: TileLoader = app.dependencies.tileLoader) {
         self.options = options
         self.downloadManager = downloadManager
+        self.tileLoader = tileLoader
         super.init(urlTemplate: nil)
         
         maximumZ = Self.maximumZ
@@ -45,16 +48,25 @@ class ChartTileOverlay: MKTileOverlay {
     }
     
     override func url(forTilePath path: MKTileOverlayPath) -> URL {
+        urlAndCenter(forTilePath: path).0
+    }
+    
+    private func urlAndCenter(forTilePath path: MKTileOverlayPath) -> (URL, CLLocationCoordinate2D) {
         let dpi = options.highQuality ? options.textSize.rawValue : options.textSize.rawValue / 2
         var warningLayersParam = options.showChartAreasAndLimits ? "&layers=show:2,3,4,5,6,7" : "&layers=show:2,6"
         warningLayersParam = warningLayersParam.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         let tileWidth = Int(options.highQuality ? tileSize.width : tileSize.width / 2)
 
-        let (minY, maxX) = convertToWebMercator(coordinate: topLeftCoordinateOfXYZTile(x: path.x, y: path.y, z: path.z))
+        let bottomRightCoord = topLeftCoordinateOfXYZTile(x: path.x, y: path.y, z: path.z)
+        let (minY, maxX) = convertToWebMercator(coordinate: bottomRightCoord)
         let (maxY, minX) = convertToWebMercator(coordinate: topLeftCoordinateOfXYZTile(x: path.x + 1, y: path.y + 1, z: path.z))
         
-        let urlString = "https://gis.charttools.noaa.gov/arcgis/rest/services/MCS/NOAAChartDisplay/MapServer/exts/MaritimeChartService/MapServer/export?transparent=true\(warningLayersParam)&size=\(tileWidth)%2C\(tileWidth)&bbox=\(minY)%2C\(minX)%2C\(maxY)%2C\(maxX)&bboxsr=3857&imagesr=3857&dpi=\(dpi)&display_params=\(displayParams)"
-        return URL(string: urlString)!
+        let urlString = "https://8qkv83.deta.dev/tile" +
+//        let urlString = "https://gis.charttools.noaa.gov/arcgis/rest/services/MCS/NOAAChartDisplay/MapServer/exts/MaritimeChartService/MapServer/export" +
+        "?transparent=true\(warningLayersParam)&size=\(tileWidth)%2C\(tileWidth)&bbox=\(minY)%2C\(minX)%2C\(maxY)%2C\(maxX)&bboxsr=3857&imagesr=3857&dpi=\(dpi)&display_params=\(displayParams)"
+        return (URL(string: urlString)!,
+                .init(latitude: .init(bottomRightCoord.lat),
+                      longitude: .init(bottomRightCoord.lon)))
     }
     
     override func loadTile(at path: MKTileOverlayPath, result: @escaping (Data?, Error?) -> Void) {
@@ -62,7 +74,8 @@ class ChartTileOverlay: MKTileOverlay {
             result(data, nil)
         } else {
 //            result(nil, NSError(domain: "fish", code: 9))
-            super.loadTile(at: path, result: result)
+            let (url, coordinate) = urlAndCenter(forTilePath: path)
+            tileLoader.load(.init(url: url, coordinate: coordinate, zoomLevel: path.z), completion: result)
         }
     }
     

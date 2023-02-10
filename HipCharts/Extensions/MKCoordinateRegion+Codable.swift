@@ -57,4 +57,13 @@ extension MKCoordinateRegion {
         .init(latitude: center.latitude - span.latitudeDelta / 2,
               longitude: center.longitude + span.longitudeDelta / 2)
     }
+    
+    func contains(_ coord: CLLocationCoordinate2D, buffer: CLLocationCoordinate2D = .init()) -> Bool {
+        let span = MKCoordinateSpan(latitudeDelta: self.span.latitudeDelta + buffer.latitude * 2,
+                                    longitudeDelta: self.span.longitudeDelta + buffer.longitude * 2)
+        var result = true
+        result = result && cos((center.latitude - coord.latitude) * .pi / 180.0) > cos(span.latitudeDelta / 2.0 * .pi / 180.0)
+        result = result && cos((center.longitude - coord.longitude) * .pi / 180.0) > cos(span.longitudeDelta / 2.0 * .pi / 180.0);
+        return result
+    }
 }

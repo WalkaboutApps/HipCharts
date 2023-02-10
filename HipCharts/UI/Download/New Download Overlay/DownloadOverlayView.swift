@@ -32,7 +32,7 @@ struct DownloadOverlayView: View {
     }
     
     var subTitleText: String {
-        customPolygon == nil ? "or draw a polgon" : "or download all visible tiles"
+        customPolygon == nil ? "or draw a polygon" : "or download all visible tiles"
     }
             
     var body: some View {

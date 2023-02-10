@@ -115,6 +115,8 @@ extension MapView {
             }
             DispatchQueue.main.async {
                 self.mapChangeEvent = .init(reason: .map, region: mapView.region)
+                // hacky, but works for app with one map
+                app.dependencies.tileLoader.mapRegion.send(self.mapChangeEvent)
             }
         }
     }

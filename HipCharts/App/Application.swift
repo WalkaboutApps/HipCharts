@@ -20,6 +20,7 @@ extension Application {
         let pricingManager = PricingManager()
         let defaults = UserDefaults.standard
         let logger = ConsoleLogger()
+        let tileLoader = TileLoader()
     }
 }
 

@@ -10,6 +10,7 @@ import CoreLocation
 
 struct MapMenuView: View {
     @State var showMapTypeView = false
+    @State var isLoadingTiles = false
     
     @Binding var state: MapState
     @Binding var showDownloadMenu: Bool
@@ -21,6 +22,14 @@ struct MapMenuView: View {
     
     var body: some View {
         VStack(alignment: .trailing) {
+            if isLoadingTiles {
+                VStack {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                        .padding()
+                }
+            }
+            
             if showMapTypeView {
                 mapTypeView
             }
@@ -99,6 +108,7 @@ struct MapMenuView: View {
         .padding()
         .padding(.bottom)
         .animation(.easeInOut, value: 0.3)
+        .onReceive(app.dependencies.tileLoader.isLoading) { isLoadingTiles = $0 }
     }
     
     var mapTypeView: some View {

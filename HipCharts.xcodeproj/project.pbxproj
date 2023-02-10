@@ -51,6 +51,7 @@
 		CF65A14128D7B27B004B241B /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF65A14028D7B27B004B241B /* ToastView.swift */; };
 		CF65A14428D7EB65004B241B /* Color+UISystemColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF65A14328D7EB65004B241B /* Color+UISystemColors.swift */; };
 		CF67800D2905CB030007DFAF /* ChartDisplayParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF67800C2905CB030007DFAF /* ChartDisplayParams.swift */; };
+		CF8247E32992FBF8000B4BD3 /* TileLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8247E22992FBF8000B4BD3 /* TileLoader.swift */; };
 		CF859ED428E37AD7005C9FD4 /* Codable+RawRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF859ED328E37AD7005C9FD4 /* Codable+RawRepresentable.swift */; };
 		CF859ED828E37E9B005C9FD4 /* MapRegionChangeEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF859ED728E37E9B005C9FD4 /* MapRegionChangeEvent.swift */; };
 		CF859EDA28E382F4005C9FD4 /* MapState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF859ED928E382F4005C9FD4 /* MapState.swift */; };
@@ -130,6 +131,7 @@
 		CF65A14028D7B27B004B241B /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 		CF65A14328D7EB65004B241B /* Color+UISystemColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+UISystemColors.swift"; sourceTree = "<group>"; };
 		CF67800C2905CB030007DFAF /* ChartDisplayParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartDisplayParams.swift; sourceTree = "<group>"; };
+		CF8247E22992FBF8000B4BD3 /* TileLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileLoader.swift; sourceTree = "<group>"; };
 		CF859ED328E37AD7005C9FD4 /* Codable+RawRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Codable+RawRepresentable.swift"; sourceTree = "<group>"; };
 		CF859ED728E37E9B005C9FD4 /* MapRegionChangeEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapRegionChangeEvent.swift; sourceTree = "<group>"; };
 		CF859ED928E382F4005C9FD4 /* MapState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapState.swift; sourceTree = "<group>"; };
@@ -408,6 +410,7 @@
 			children = (
 				CF143C3228D51E7D00904E7E /* MapView.swift */,
 				CF65A12528D65A12004B241B /* ChartTileOverlay.swift */,
+				CF8247E22992FBF8000B4BD3 /* TileLoader.swift */,
 				CF67800C2905CB030007DFAF /* ChartDisplayParams.swift */,
 				CF859ED728E37E9B005C9FD4 /* MapRegionChangeEvent.swift */,
 			);
@@ -598,6 +601,7 @@
 				CF65A13628D6BFAE004B241B /* UserDefaults+Codable.swift in Sources */,
 				CF65A12C28D6737B004B241B /* URLResponse+Error.swift in Sources */,
 				CF859EDA28E382F4005C9FD4 /* MapState.swift in Sources */,
+				CF8247E32992FBF8000B4BD3 /* TileLoader.swift in Sources */,
 				CF65A12828D669E2004B241B /* DisplayError.swift in Sources */,
 				CF65A12228D6561F004B241B /* MKCoordinateRegion+Codable.swift in Sources */,
 				CF32983F28EB3D2600148E57 /* SubscriptionsSectionView.swift in Sources */,
