@@ -180,7 +180,7 @@ func estimatedDownloadTileCount(region: MKCoordinateRegion) -> Int {
         let width = Int(ceil(Float(region.span.longitudeDelta) / degreesPerTile)) + 1
         let height = Int(ceil(Float(region.span.latitudeDelta) / degreesPerTile)) + 1
         count += width * height
-        logger.log("\(width * height) tiles in zoom level \(zoomLevel). ~\(Float(width * height) * averageFileSizeBytes / bytesInMB) mb")
+//        logger.log("\(width * height) tiles in zoom level \(zoomLevel). ~\(Float(width * height) * averageFileSizeBytes / bytesInMB) mb")
     }
     return count
 }
@@ -195,7 +195,7 @@ func estimatedDownloadTileCount(polygon: Polygon) -> Int {
         let tileWidthMeters = tileWidthDegrees * metersPerDegreeLongitudeEquator
         let horizontalCount = Float(squarePolygonDimensionMeters) / tileWidthMeters
         count += max(Int(powf(horizontalCount, 2) * 2 ), 1)
-        logger.log("\(count) tiles in zoom level \(zoomLevel). ~\(Float(count) * averageFileSizeBytes / bytesInMB) mb")
+//        logger.log("\(count) tiles in zoom level \(zoomLevel). ~\(Float(count) * averageFileSizeBytes / bytesInMB) mb")
     }
     return count
 }

@@ -79,7 +79,6 @@ struct MapMenuView: View {
                     DownloadMenuView(showNewDownloadOverlay: $showNewDownloadOverlayView,
                                      showDownloadMenu: $showDownloadMenu,
                                      mapChangeEvent: $state.regionChangeEvent,
-                                     showPaywall: $state.showPaywall,
                                      chartOptions: state.options.chart)
                 } label: {
                     Image(systemName: "square.and.arrow.down.on.square")

@@ -17,10 +17,9 @@ struct Application {
 extension Application {
     struct Dependencies {
         let downloadManager = DownloadManager()
-        let pricingManager = PricingManager()
         let defaults = UserDefaults.standard
         let logger = ConsoleLogger()
-        let tileLoader = TileLoader()
+        let tileLoader = TileNetworkLoader()
     }
 }
 

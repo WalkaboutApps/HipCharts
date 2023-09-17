@@ -78,8 +78,6 @@ struct MapSettingsMenuView: View {
                         .font(.caption)
                 }
             }
-            
-            SubscriptionsSectionView()
         }
         .navigationTitle("Settings")
     }

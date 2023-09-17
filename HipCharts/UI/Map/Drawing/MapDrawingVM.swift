@@ -88,6 +88,10 @@ class MapDrawingVM: VM {
         updateView()
     }
     
+    func willDissapear() {
+        map.delegate = previousMapDelegate
+    }
+    
     func exit(){
         map.delegate = previousMapDelegate
         onDone(.init(coordinates: coordinates))

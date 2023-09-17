@@ -75,6 +75,11 @@ class MapDrawingUIView: UIView, VMViewInterface {
         }, completion: nil)
     }
     
+    override func removeFromSuperview() {
+        vm.willDissapear()
+        super.removeFromSuperview()
+    }
+    
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         if menuContainerView.frame.contains(point){
             return true

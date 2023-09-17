@@ -86,6 +86,7 @@ struct MapView: UIViewRepresentable {
             drawingView.bind(to: vm)
             view.addSubviewStretchedToBounds(drawingView)
         } else if showDrawing == nil, let visible = visibleDrawingView {
+            visible.vm.exit()
             visible.removeFromSuperview()
         }
     }

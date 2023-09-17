@@ -1,5 +1,5 @@
 //
-//  TileLoader.swift
+//  TileNetworkLoader.swift
 //  HipCharts
 //
 //  Created by Fish Sticks on 2/7/23.
@@ -9,7 +9,7 @@ import Foundation
 import CoreLocation
 import Combine
 
-class TileLoader {
+class TileNetworkLoader {
     let mapRegion = PassthroughSubject<MapRegionChangeEvent, Never>()
     private let queue = DispatchQueue(label: "TileLoader", qos: .default)
     private let session = URLSession(configuration: .ephemeral)
@@ -65,7 +65,7 @@ class TileLoader {
     }
 }
 
-extension TileLoader {
+extension TileNetworkLoader {
     struct LoadRequest: Hashable {
         let url: URL
         let coordinate: CLLocationCoordinate2D

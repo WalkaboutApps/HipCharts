@@ -33,7 +33,7 @@ struct MapState: CodableAndRawRepresentable {
         struct Chart: Codable, Equatable {
             var textSize = ChartTextSize.medium
             var showChartAreasAndLimits = true
-            var highQuality = false
+            var highQuality = true
             
             private var _depthUnit: DepthUnit?
             var depthUnit: DepthUnit {
@@ -51,7 +51,6 @@ struct MapState: CodableAndRawRepresentable {
     
     // Not stored properties
     var showDrawing: DrawState?
-    var showPaywall = false
 }
 
 extension MapState {

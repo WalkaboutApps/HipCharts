@@ -27,7 +27,7 @@ class ChartTileOverlay: MKTileOverlay {
     let options: MapState.Options.Chart
     
     private let downloadManager: DownloadManager
-    private let tileLoader: TileLoader
+    private let tileLoader: TileNetworkLoader
     
     private lazy var displayParams = ChartDisplayParams(ECDISParameters:
             .init(DynamicParameters: .init(Parameter: [
@@ -37,7 +37,7 @@ class ChartTileOverlay: MKTileOverlay {
     
     required init(options: MapState.Options.Chart,
                   downloadManager: DownloadManager = app.dependencies.downloadManager,
-                  tileLoader: TileLoader = app.dependencies.tileLoader) {
+                  tileLoader: TileNetworkLoader = app.dependencies.tileLoader) {
         self.options = options
         self.downloadManager = downloadManager
         self.tileLoader = tileLoader
@@ -61,8 +61,7 @@ class ChartTileOverlay: MKTileOverlay {
         let (minY, maxX) = convertToWebMercator(coordinate: bottomRightCoord)
         let (maxY, minX) = convertToWebMercator(coordinate: topLeftCoordinateOfXYZTile(x: path.x + 1, y: path.y + 1, z: path.z))
         
-        let urlString = "https://8qkv83.deta.dev/tile" +
-//        let urlString = "https://gis.charttools.noaa.gov/arcgis/rest/services/MCS/NOAAChartDisplay/MapServer/exts/MaritimeChartService/MapServer/export" +
+        let urlString = "https://gis.charttools.noaa.gov/arcgis/rest/services/MCS/NOAAChartDisplay/MapServer/exts/MaritimeChartService/MapServer/export" +
         "?transparent=true\(warningLayersParam)&size=\(tileWidth)%2C\(tileWidth)&bbox=\(minY)%2C\(minX)%2C\(maxY)%2C\(maxX)&bboxsr=3857&imagesr=3857&dpi=\(dpi)&display_params=\(displayParams)"
         return (URL(string: urlString)!,
                 .init(latitude: .init(bottomRightCoord.lat),
