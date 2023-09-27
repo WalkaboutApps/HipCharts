@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		CF0C8EBF2AB770D8002689D2 /* TileBatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0C8EBE2AB770D8002689D2 /* TileBatcher.swift */; };
+		CF0C8EC32AC3C68D002689D2 /* NeededTileUtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0C8EC22AC3C68D002689D2 /* NeededTileUtilTests.swift */; };
 		CF143C0828D51DA100904E7E /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF143C0728D51DA100904E7E /* Main.swift */; };
 		CF143C0A28D51DA100904E7E /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF143C0928D51DA100904E7E /* RootView.swift */; };
 		CF143C0C28D51DA600904E7E /* AppIcon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CF143C0B28D51DA600904E7E /* AppIcon.xcassets */; };
@@ -77,6 +78,7 @@
 
 /* Begin PBXFileReference section */
 		CF0C8EBE2AB770D8002689D2 /* TileBatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileBatcher.swift; sourceTree = "<group>"; };
+		CF0C8EC22AC3C68D002689D2 /* NeededTileUtilTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeededTileUtilTests.swift; sourceTree = "<group>"; };
 		CF143C0428D51DA100904E7E /* HipCharts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HipCharts.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF143C0728D51DA100904E7E /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
 		CF143C0928D51DA100904E7E /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -157,6 +159,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CF0C8EC02AC3C65B002689D2 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				CF0C8EC12AC3C660002689D2 /* Download */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		CF0C8EC12AC3C660002689D2 /* Download */ = {
+			isa = PBXGroup;
+			children = (
+				CF0C8EC22AC3C68D002689D2 /* NeededTileUtilTests.swift */,
+			);
+			path = Download;
+			sourceTree = "<group>";
+		};
 		CF143BFB28D51DA100904E7E = {
 			isa = PBXGroup;
 			children = (
@@ -204,6 +222,7 @@
 		CF143C1728D51DA700904E7E /* HipChartsTests */ = {
 			isa = PBXGroup;
 			children = (
+				CF0C8EC02AC3C65B002689D2 /* Managers */,
 				CF143C1828D51DA700904E7E /* FreeChartsTests.swift */,
 			);
 			path = HipChartsTests;
@@ -560,6 +579,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF0C8EC32AC3C68D002689D2 /* NeededTileUtilTests.swift in Sources */,
 				CF143C1928D51DA700904E7E /* FreeChartsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -787,7 +807,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FreeCharts.app/FreeCharts";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HipCharts.app/HipCharts";
 			};
 			name = Debug;
 		};
@@ -807,7 +827,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FreeCharts.app/FreeCharts";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HipCharts.app/HipCharts";
 			};
 			name = Release;
 		};
